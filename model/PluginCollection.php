@@ -30,7 +30,7 @@ class PluginCollection
     public function getPlugins()
     {
         foreach ($this->allRepoData as $k => $repo) {
-            if ($k > 2) {
+            if ($k > 9) {
                 break;
             }
             $plugin = $repo['name'];
