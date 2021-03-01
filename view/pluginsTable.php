@@ -4,10 +4,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="main.css" rel="stylesheet" type="text/css"/>
-    <title>Document</title>
+    <title>Oversight</title>
 </head>
 <body>
 <?php
+echo 'Oversight';
 echo '<table>';
 echo '<thead class="table-head">';
 echo '<tr>';

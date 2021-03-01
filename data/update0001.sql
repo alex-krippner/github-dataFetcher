@@ -11,7 +11,7 @@ CREATE TABLE plugins
     forks_count       INTEGER
 );
 
-CREATE TABLE contributor
+CREATE TABLE contributors
 (
     plugin_name       TEXT PRIMARY KEY,
     contributor_login TEXT,
@@ -38,7 +38,7 @@ CREATE TABLE issues
 
 -- ************************************** owner
 
-CREATE TABLE owner
+CREATE TABLE owners
 (
     owner_login       TEXT PRIMARY KEY,
     plugin_name       TEXT,
