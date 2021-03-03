@@ -64,7 +64,7 @@ class DB
         if (isset($data)) {
             $this->pdo->beginTransaction();
 
-            try{
+            try {
                 $stmt = $this->pdo->prepare($query);
                 $stmt->execute($data);
                 $this->pdo->commit();
@@ -72,7 +72,6 @@ class DB
                 $this->pdo->rollBack();
                 echo "Failed: " . $e->getMessage();
             }
-
         }
     }
 

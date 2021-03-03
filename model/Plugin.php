@@ -28,6 +28,7 @@ class Plugin
     public $newest_issue;
     public $commits;
     public $average_commits_per_year;
+    public $contributors_api_url;
 
     function __construct($pluginData)
     {
@@ -51,6 +52,7 @@ class Plugin
             $pluginData['commits_url']));
         $this->average_commits_per_year = $this->calcAvgCommits(str_replace('{/sha}', '?per_page=100&state=all',
             $pluginData['commits_url']), $this->created);
+        $this->contributors_api_url = $pluginData['contributors_url'];
     }
 
     /**

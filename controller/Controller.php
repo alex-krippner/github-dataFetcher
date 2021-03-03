@@ -3,6 +3,7 @@
 namespace oversight\controller;
 
 use oversight\inc\DB;
+use oversight\inc\Services;
 use oversight\model\PluginCollection;
 
 class Controller
@@ -46,7 +47,7 @@ class Controller
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(4);
+        $plugins = $pluginCollection->getPlugins(2);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {
@@ -62,7 +63,40 @@ class Controller
                 ";
                 $data = [$plugin->name, 'cosmocode', $plugin->open_issues_count, $plugin->fork, $plugin->commits];
 
+                // insert plugin data
                 $db->insertData($query, $data);
+
+                // insert contributors data
+                $contributors = preg_match('/^contributors$/', $_GET['get']);
+
+                if ($contributors) {
+                    var_dump($plugin->contributors_api_url);
+                    $service = new Services();
+                    $contributorsArray = $service->getApiData($plugin->contributors_api_url, '');
+                    foreach ($contributorsArray as $contributor) {
+                        $contributorData = $service->getApiData($contributor['url'], '');
+                        $query = "
+                        INSERT INTO contributors (plugin_name, contributor_login, name, email, company)
+                        VALUES (?, ?, ?, ?, ?)
+                        ON CONFLICT (plugin_name) DO UPDATE SET
+                            contributor_login=excluded.contributor_login,
+                            name=excluded.name,
+                            email=excluded.email,
+                            company=excluded.company
+                ";
+
+                        $data = [
+                            $plugin->name,
+                            $contributorData['login'],
+                            $contributorData['name'],
+                            $contributorData['email'],
+                            $contributorData['company'],
+                        ];
+
+                        // insert plugin data
+                        $db->insertData($query, $data);
+                    }
+                }
             }
         }
 
