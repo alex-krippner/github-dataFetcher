@@ -3,6 +3,7 @@
 namespace oversight\controller;
 
 use oversight\inc\DB;
+use oversight\model\PluginCollection;
 
 class Controller
 {
@@ -13,8 +14,12 @@ class Controller
      */
     public function showPlugins()
     {
-        $pluginCollection = new \oversight\model\PluginCollection();
-        $plugins = $pluginCollection->getPlugins();
+        $pluginCollection = new PluginCollection();
+        $plugins = $pluginCollection->getPlugins(1);
+        if (count($plugins) === 0) {
+            echo 'No Plugins';
+            die();
+        }
         include __DIR__ . '/../view/pluginsTable.php';
     }
 
@@ -24,29 +29,37 @@ class Controller
      */
     public function initDB()
     {
-        $allRepoData = file_get_contents(__DIR__ . '/../data/repos.json');
-        $allRepoData = json_decode($allRepoData, true);
-
-
         // instantiate database
         $db = new DB();
         $db->connect();
 
         // create table
         $db->createTable();
+        $db->closeConnection();
+    }
 
+    public function insertData()
+    {
+        // connect to DB
+        $db = new DB();
+        $db->connect();
 
-        // loop the json data and insert into plugins table
-        if (isset($allRepoData)) {
-            foreach ($allRepoData as $repo) {
-                $query = "INSERT INTO plugins (plugin_name, owner_login, open_issues_count, forks_count ) 
-                VALUES (?, ?, ?, ?);";
-                $data = [$repo['name'], $repo['owner']['login'], $repo['open_issues'], $repo['forks']];
+        // get plugin repos in array form
+        $pluginCollection = new PluginCollection();
+        $plugins = $pluginCollection->getPlugins(8);
+
+        // loop array of plugin objects and insert into database's plugins table
+        if (isset($plugins)) {
+            foreach ($plugins as $plugin) {
+                $query = "INSERT INTO plugins (plugin_name, owner_login, open_issues_count, forks_count, commits_count )
+                VALUES (?, ?, ?, ?, ?);";
+                $data = [$plugin->name, 'cosmocode', $plugin->open_issues_count, $plugin->fork, $plugin->commits];
 
                 $db->insertData($query, $data);
             }
         }
 
         $db->countRows('plugins');
+        $db->closeConnection();
     }
 }

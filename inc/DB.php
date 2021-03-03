@@ -5,6 +5,9 @@ namespace oversight\inc;
 use PDO;
 use PDOException;
 
+// TODO: Close or persist PDO connection
+// PDO object will persist for the length of script and automatically close if not done explicitly or not persisted
+
 /**
  * PDO wrapper class
  *
@@ -25,8 +28,14 @@ class DB
         try {
             $this->pdo = new PDO("sqlite:" . __DIR__ . "/../data/oversight.sqlite3");
         } catch (PDOException $e) {
-            throw new PDOException($e->getMessage());
+            print "Error!: " . $e->getMessage() . "<br/>";
+            die();
         }
+    }
+
+    public function closeConnection()
+    {
+        $this->pdo = null;
     }
 
 

@@ -2,7 +2,7 @@
 
 namespace oversight\model;
 
-use model\Plugin as Plugin;
+use oversight\model\Plugin as Plugin;
 
 class PluginCollection
 {
@@ -25,15 +25,19 @@ class PluginCollection
      * repo, and pushes the new Plugin object into an array.
      *
      * @return array
+     * @var number $amount The number (1 based / not array index based) of plugins for which data is to be fetched
      */
 
-    public function getPlugins()
+    public function getPlugins($amount)
     {
+        if ($amount === 0) {
+            return array();
+        }
+
         foreach ($this->allRepoData as $k => $repo) {
-            if ($k > 9) {
+            if ($k > $amount - 1) {
                 break;
             }
-            $plugin = $repo['name'];
             $this->pluginsData[] = new Plugin($repo);
         }
 

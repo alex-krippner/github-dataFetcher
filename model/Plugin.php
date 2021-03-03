@@ -4,6 +4,7 @@ namespace oversight\model;
 
 use \oversight\inc\Services as Services;
 
+// TODO: Add a plugin owner property
 
 class Plugin
 {

@@ -19,3 +19,4 @@ spl_autoload_register(function ($class) {
 
 $controller = new Controller();
 $controller->initDB();
+$controller->insertData();
