@@ -1,8 +1,8 @@
 <?php
 
-namespace githubDataFetcher\model;
+namespace oversight\model;
 
-use \githubDataFetcher\inc\Services as Services;
+use \oversight\inc\Services as Services;
 
 
 class Plugin

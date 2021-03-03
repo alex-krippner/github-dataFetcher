@@ -1,8 +1,8 @@
 <?php
 
-namespace githubDataFetcher\model;
+namespace oversight\model;
 
-use githubDataFetcher\model\Plugin as Plugin;
+use model\Plugin as Plugin;
 
 class PluginCollection
 {

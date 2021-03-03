@@ -1,11 +1,11 @@
 <?php
 
-namespace githubDataFetcher;
+namespace oversight;
 
-use githubDataFetcher\controller\Controller;
+use oversight\controller\Controller;
 
 spl_autoload_register(function ($class) {
-    $topNS = 'githubDataFetcher';
+    $topNS = 'oversight';
     $c = str_replace(
         [$topNS, '\\'],
         ['', DIRECTORY_SEPARATOR],
@@ -19,4 +19,4 @@ spl_autoload_register(function ($class) {
 
 
 $controller = new Controller();
-$controller->invoke();
+$controller->showPlugins();

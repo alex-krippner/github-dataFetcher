@@ -1,6 +1,6 @@
 <?php
 
-namespace githubDataFetcher\inc;
+namespace oversight\inc;
 
 class Services
 {
