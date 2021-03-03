@@ -59,9 +59,20 @@ class DB
      */
     public function insertData($query, $data)
     {
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
         if (isset($data)) {
-            $stmt = $this->pdo->prepare($query);
-            $stmt->execute($data);
+            $this->pdo->beginTransaction();
+
+            try{
+                $stmt = $this->pdo->prepare($query);
+                $stmt->execute($data);
+                $this->pdo->commit();
+            } catch (\Exception $e) {
+                $this->pdo->rollBack();
+                echo "Failed: " . $e->getMessage();
+            }
+
         }
     }
 

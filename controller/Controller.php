@@ -46,13 +46,20 @@ class Controller
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(8);
+        $plugins = $pluginCollection->getPlugins(4);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {
             foreach ($plugins as $plugin) {
-                $query = "INSERT INTO plugins (plugin_name, owner_login, open_issues_count, forks_count, commits_count )
-                VALUES (?, ?, ?, ?, ?);";
+                $query = "
+                INSERT INTO plugins (plugin_name, owner_login, open_issues_count, forks_count, commits_count )
+                VALUES (?, ?, ?, ?, ?)
+                ON CONFLICT (plugin_name) DO UPDATE SET
+                    owner_login=excluded.owner_login,
+                    open_issues_count=excluded.open_issues_count,
+                    forks_count=excluded.forks_count,
+                    commits_count=excluded.commits_count
+                ";
                 $data = [$plugin->name, 'cosmocode', $plugin->open_issues_count, $plugin->fork, $plugin->commits];
 
                 $db->insertData($query, $data);
