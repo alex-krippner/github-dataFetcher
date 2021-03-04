@@ -5,8 +5,8 @@ namespace oversight\inc;
 use PDO;
 use PDOException;
 
-// TODO: Close or persist PDO connection
-// PDO object will persist for the length of script and automatically close if not done explicitly or not persisted
+// TODO: Write migration logic
+// https://www.sqlite.org/lang_altertable.html
 
 /**
  * PDO wrapper class
@@ -51,7 +51,6 @@ class DB
             }
         }
     }
-
     /**
      * @param string $query sqlite query string with ? placeholders
      * @param array $data array of data strings

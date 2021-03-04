@@ -6,6 +6,8 @@ use oversight\inc\DB;
 use oversight\inc\Services;
 use oversight\model\PluginCollection;
 
+// TODO: Create class model for contributor
+
 class Controller
 {
 
@@ -68,7 +70,7 @@ class Controller
 
                 // insert contributors data
                 $contributors = preg_match('/^contributors$/', $_GET['get']);
-
+                // FIXME:  Change contributors table's primary key to contributor_login
                 if ($contributors) {
                     var_dump($plugin->contributors_api_url);
                     $service = new Services();
