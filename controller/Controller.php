@@ -68,11 +68,14 @@ class Controller
                 // insert plugin data
                 $db->insertData($query, $data);
 
+
+                $contributors = null;
                 // insert contributors data
-                $contributors = preg_match('/^contributors$/', $_GET['get']);
+                if (isset($_GET) && isset($_GET['get'])) {
+                    $contributors = preg_match('/^contributors$/', $_GET['get']);
+                }
                 // FIXME:  Change contributors table's primary key to contributor_login
                 if ($contributors) {
-                    var_dump($plugin->contributors_api_url);
                     $service = new Services();
                     $contributorsArray = $service->getApiData($plugin->contributors_api_url, '');
                     foreach ($contributorsArray as $contributor) {
