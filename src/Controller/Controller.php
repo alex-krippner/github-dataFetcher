@@ -5,13 +5,13 @@ namespace Mon\Oversight\Controller;
 use Mon\Oversight\inc\DB;
 use Mon\Oversight\inc\Services;
 use Mon\Oversight\Model\PluginCollection;
+use Mon\Oversight\inc\Helper;
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 
 // TODO: Create class model for contributor
-// TODO: Set twig cache to off
 
 class Controller
 {
@@ -23,30 +23,11 @@ class Controller
     public function showPlugins()
     {
         $loader = new FilesystemLoader(__DIR__ . '/../view');
-        $twig = new Environment($loader);
+        $twig = new Environment($loader, ['cache' => false]);
         $twig->addExtension(new \Twig\Extension\DebugExtension());
 
-        $twig->addFilter(new \Twig\TwigFilter('cast_to_array', function ($dataArray) {
-            $response = array();
-            $classArray = array();
-            foreach ($dataArray as $stdClassObject) {
-                foreach ($stdClassObject as $key => $value) {
-                    $classArray = array_merge($classArray, array($key => $value));
-                }
-                $response[] = $classArray;
-            }
-
-            return $response;
-        }));
-
-        $twig->addFilter(new \Twig\TwigFilter('classObj_to_array', function ($stdClassObject) {
-            $classArray = array();
-
-            foreach ($stdClassObject as $key => $value) {
-                $classArray = array_merge($classArray, array($key => $value));
-            }
-
-            return $classArray;
+        $twig->addFilter(new \Twig\TwigFilter('cast_to_array', function ($target) {
+            return Helper::castToArray($target);
         }));
 
         $pluginCollection = new PluginCollection();
