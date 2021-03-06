@@ -1,12 +1,17 @@
 <?php
 
-namespace oversight\controller;
+namespace mon\oversight\controller;
 
-use oversight\inc\DB;
-use oversight\inc\Services;
-use oversight\model\PluginCollection;
+use mon\oversight\inc\DB;
+use mon\oversight\inc\Services;
+use mon\oversight\model\PluginCollection;
+
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+
 
 // TODO: Create class model for contributor
+// TODO: Set twig cache to off
 
 class Controller
 {
@@ -17,13 +22,40 @@ class Controller
      */
     public function showPlugins()
     {
+        $loader = new FilesystemLoader(__DIR__ . '/../view');
+        $twig = new Environment($loader);
+        $twig->addExtension(new \Twig\Extension\DebugExtension());
+
+        $twig->addFilter(new \Twig\TwigFilter('cast_to_array', function ($dataArray) {
+            $response = array();
+            $classArray = array();
+            foreach ($dataArray as $stdClassObject) {
+                foreach ($stdClassObject as $key => $value) {
+                    $classArray = array_merge($classArray, array($key => $value));
+                }
+                $response[] = $classArray;
+            }
+
+            return $response;
+        }));
+
+        $twig->addFilter(new \Twig\TwigFilter('classObj_to_array', function ($stdClassObject) {
+            $classArray = array();
+
+            foreach ($stdClassObject as $key => $value) {
+                $classArray = array_merge($classArray, array($key => $value));
+            }
+
+            return $classArray;
+        }));
+
         $pluginCollection = new PluginCollection();
         $plugins = $pluginCollection->getPlugins(1);
         if (count($plugins) === 0) {
             echo 'No Plugins';
             die();
         }
-        include __DIR__ . '/../view/pluginsTable.php';
+        echo $twig->render('pluginsTable.html.twig', ['plugins' => $plugins]);
     }
 
 

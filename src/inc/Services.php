@@ -1,6 +1,6 @@
 <?php
 
-namespace oversight\inc;
+namespace mon\oversight\inc;
 
 class Services
 {
@@ -40,6 +40,6 @@ class Services
 
     public function getToken()
     {
-        return file_get_contents(__DIR__ . '/../.env');
+        return file_get_contents(__DIR__ . '/../../.env');
     }
 }

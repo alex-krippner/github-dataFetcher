@@ -1,6 +1,6 @@
 <?php
 
-namespace oversight\inc;
+namespace mon\oversight\inc;
 
 use PDO;
 use PDOException;
@@ -51,6 +51,7 @@ class DB
             }
         }
     }
+
     /**
      * @param string $query sqlite query string with ? placeholders
      * @param array $data array of data strings

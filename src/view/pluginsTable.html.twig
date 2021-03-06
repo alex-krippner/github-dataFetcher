@@ -1,0 +1,32 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="main.css" rel="stylesheet" type="text/css"/>
+    <title>Oversight</title>
+</head>
+<body>
+
+<h1>Oversight</h1>
+<table>
+    <thead>
+        <tr>
+        {% for key, value in plugins[0] | classObj_to_array %}
+            <td>{{ key }}</td>
+        {% endfor %}
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for plugin in plugins | cast_to_array%}
+    <tr>
+        {% for key, pluginData in plugin %}
+        <td>{{pluginData}}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

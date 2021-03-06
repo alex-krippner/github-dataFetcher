@@ -1,8 +1,8 @@
 <?php
 
-namespace oversight\model;
+namespace mon\oversight\model;
 
-use \oversight\inc\Services as Services;
+use mon\oversight\inc\Services as Services;
 
 // TODO: Add a plugin owner property
 

@@ -1,0 +1,20 @@
+{
+  "name": "mon/oversight",
+  "description": "Overview of dokuwiki plugins",
+  "type": "project",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Alex Krippner",
+      "email": "alexakrippner@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "mon\\oversight\\": "src"
+    }
+  },
+  "require": {
+    "twig/twig": "^3.3"
+  }
+}

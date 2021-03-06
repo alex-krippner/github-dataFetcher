@@ -1,4 +1,11 @@
 .env
+
+# IDE
 .idea/
-data/oversight.sqlite3
-data/repos.json
+
+# data
+src/data/oversight.sqlite3
+src/data/repos.json
+
+# composer
+vendor

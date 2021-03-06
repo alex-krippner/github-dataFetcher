@@ -1,8 +1,8 @@
 <?php
 
-namespace oversight\model;
+namespace mon\oversight\model;
 
-use oversight\model\Plugin as Plugin;
+use mon\oversight\model\Plugin as Plugin;
 
 class PluginCollection
 {
@@ -16,7 +16,7 @@ class PluginCollection
 
     function __construct()
     {
-        $this->allRepoData = file_get_contents('./data/repos.json');
+        $this->allRepoData = file_get_contents(__DIR__ . '/../data/repos.json');
         $this->allRepoData = json_decode($this->allRepoData, true);
     }
 
