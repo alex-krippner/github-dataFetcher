@@ -1,8 +1,8 @@
 <?php
 
-namespace mon\oversight\model;
+namespace Mon\Oversight\Model;
 
-use mon\oversight\model\Plugin as Plugin;
+use Mon\Oversight\Model\Plugin as Plugin;
 
 class PluginCollection
 {

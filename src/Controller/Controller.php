@@ -1,10 +1,10 @@
 <?php
 
-namespace mon\oversight\controller;
+namespace Mon\Oversight\Controller;
 
-use mon\oversight\inc\DB;
-use mon\oversight\inc\Services;
-use mon\oversight\model\PluginCollection;
+use Mon\Oversight\inc\DB;
+use Mon\Oversight\inc\Services;
+use Mon\Oversight\Model\PluginCollection;
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;

@@ -1,6 +1,6 @@
 <?php
 
-namespace mon\oversight\inc;
+namespace Mon\Oversight\inc;
 
 class Services
 {
