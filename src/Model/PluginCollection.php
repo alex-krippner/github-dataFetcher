@@ -4,6 +4,8 @@ namespace Mon\Oversight\Model;
 
 use Mon\Oversight\Model\Plugin as Plugin;
 
+// FIXME: Write getter method
+
 class PluginCollection
 {
 

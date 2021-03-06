@@ -2,10 +2,12 @@
 
 namespace Mon\Oversight\Controller;
 
+use Mon\Oversight\Model\PluginCollection;
+use Mon\Oversight\Model\ContributorCollection;
+
+use Mon\Oversight\inc\Helper;
 use Mon\Oversight\inc\DB;
 use Mon\Oversight\inc\Services;
-use Mon\Oversight\Model\PluginCollection;
-use Mon\Oversight\inc\Helper;
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -62,7 +64,7 @@ class Controller
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(2);
+        $plugins = $pluginCollection->getPlugins(4);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {
@@ -89,10 +91,10 @@ class Controller
                 }
                 // FIXME:  Change contributors table's primary key to contributor_login
                 if ($contributors) {
-                    $service = new Services();
-                    $contributorsArray = $service->getApiData($plugin->contributors_api_url, '');
-                    foreach ($contributorsArray as $contributor) {
-                        $contributorData = $service->getApiData($contributor['url'], '');
+                    // get contributors in array form
+                    $contributorCollection = new ContributorCollection($plugin->contributors_api_url, $plugin->name);
+                    $contributors = $contributorCollection->getContributorCollection();
+                    foreach ($contributors as $contributor) {
                         $query = "
                         INSERT INTO contributors (plugin_name, contributor_login, name, email, company)
                         VALUES (?, ?, ?, ?, ?)
@@ -104,11 +106,11 @@ class Controller
                 ";
 
                         $data = [
-                            $plugin->name,
-                            $contributorData['login'],
-                            $contributorData['name'],
-                            $contributorData['email'],
-                            $contributorData['company'],
+                            $contributor->plugin_name,
+                            $contributor->contributor_login,
+                            $contributor->name,
+                            $contributor->email,
+                            $contributor->company,
                         ];
 
                         // insert plugin data

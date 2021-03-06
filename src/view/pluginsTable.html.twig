@@ -19,7 +19,7 @@
     </thead>
 
     <tbody>
-    {% for plugin in plugins | cast_to_array%}
+    {% for plugin in plugins | cast_to_array %}
     <tr>
         {% for key, pluginData in plugin %}
         <td>{{pluginData}}</td>

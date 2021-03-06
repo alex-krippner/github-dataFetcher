@@ -2,19 +2,12 @@
 
 namespace Mon\Oversight\Model;
 
-use Mon\Oversight\inc\Services as Services;
+use Mon\Oversight\inc\Services;
 
 // TODO: Add a plugin owner property
 
 class Plugin
 {
-
-    /**
-     * @var Services instance for connecting with github REST API
-     */
-    private $services;
-
-
     public $name;
     public $link;
     public $description;
@@ -32,8 +25,6 @@ class Plugin
 
     function __construct($pluginData)
     {
-        $this->services = new Services();
-
         $this->name = $pluginData['name'];
         $this->link = sprintf('<a href="%s">%s</a>', $pluginData['html_url'], $pluginData['name']);
         $this->description = $pluginData['description'];
@@ -41,8 +32,8 @@ class Plugin
         $this->pushed = date('Y-m', strtotime($pluginData['pushed_at']));
         $this->open_issues_count = $pluginData['open_issues_count'];
         $this->fork = $pluginData['fork'] ? 'fork' : '';
-        $this->contributors = $this->services->getApiData($pluginData['contributors_url'], 'count');
-        $this->all_issues = $this->services->getApiData(str_replace('{/number}', '?per_page=100&state=all',
+        $this->contributors = Services::getApiData($pluginData['contributors_url'], 'count');
+        $this->all_issues = Services::getApiData(str_replace('{/number}', '?per_page=100&state=all',
             $pluginData['issues_url']), 'count');
         $this->oldest_issue = $this->getPluginIssueByAge('oldest',
             str_replace('{/number}', '?per_page=100&state=all', $pluginData['issues_url']));
@@ -64,7 +55,7 @@ class Plugin
     private function getPluginIssueByAge($age, $url)
     {
         $issueTitle = '';
-        $issuesArray = $this->services->getApiData($url, '');
+        $issuesArray = Services::getApiData($url, '');
         if (!$issuesArray) {
             return 'No issues';
         }
@@ -86,7 +77,7 @@ class Plugin
 
     private function getPluginCommitsCount($url)
     {
-        $commitsArray = $this->services->getApiData($url, '');
+        $commitsArray = Services::getApiData($url, '');
 
         return !$commitsArray ? 0 : count($commitsArray);
     }

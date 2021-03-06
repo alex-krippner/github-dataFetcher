@@ -11,7 +11,7 @@ class Services
      * @return int|array returns an array of plugin repos or a count of some repo data (eg. the count of then number of issues)
      */
 
-    public function getApiData($url, $what)
+    public static function getApiData($url, $what)
     {
         $ch = curl_init();
         $options = [
@@ -20,7 +20,7 @@ class Services
             CURLOPT_HEADER => false,
             CURLOPT_HTTPHEADER => [
                 'User-Agent: ABC',
-                'Authorization: token ' . $this->getToken(),
+                'Authorization: token ' . self::getToken(),
                 'Accept: application/json'
             ],
         ];
@@ -38,7 +38,7 @@ class Services
         return $ret;
     }
 
-    public function getToken()
+    public static function getToken()
     {
         return file_get_contents(__DIR__ . '/../../.env');
     }
