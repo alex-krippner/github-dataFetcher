@@ -38,7 +38,7 @@ class DB
         $this->pdo = null;
     }
 
-
+    // FIXME: use PDO transaction
     /**
      * Creates tables using up to date schemas
      */
