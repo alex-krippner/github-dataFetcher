@@ -1,6 +1,6 @@
 <?php
 
-namespace mon\oversight\inc;
+namespace Mon\Oversight\inc;
 
 use PDO;
 use PDOException;
@@ -39,6 +39,7 @@ class DB
     }
 
     // FIXME: use PDO transaction
+
     /**
      * Creates tables using up to date schemas
      */
@@ -77,10 +78,7 @@ class DB
 
     public function countRows($tableName)
     {
-        $data = $this->pdo->query('SELECT * FROM ' . $tableName)->fetchAll(PDO::FETCH_ASSOC);
-        if (isset($data)) {
-            echo 'There are ' . count($data) . ' ' . $tableName . ' in the table ' . $tableName;
-        }
+        return count($this->pdo->query('SELECT * FROM ' . $tableName)->fetchAll(PDO::FETCH_ASSOC));
     }
 
 

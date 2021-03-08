@@ -2,69 +2,49 @@
 
 namespace Mon\Oversight\Controller;
 
-use Mon\Oversight\Model\PluginCollection;
-use Mon\Oversight\Model\ContributorCollection;
-
-use Mon\Oversight\inc\Helper;
 use Mon\Oversight\inc\DB;
-use Mon\Oversight\inc\Services;
+use Mon\Oversight\Model\ContributorCollection;
+use Mon\Oversight\Model\PluginCollection;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Views\Twig;
 
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 
-
-// TODO: Create class model for contributor
-
-class Controller
+class AdminController
 {
+    private $twig;
 
-
-    /**
-     * Initiates a new plugin collection and displays plugin data
-     */
-    public function showPlugins()
+    public function __construct(Twig $twig)
     {
-        $loader = new FilesystemLoader(__DIR__ . '/../view');
-        $twig = new Environment($loader, ['cache' => false]);
-        $twig->addExtension(new \Twig\Extension\DebugExtension());
-
-        $twig->addFilter(new \Twig\TwigFilter('cast_to_array', function ($target) {
-            return Helper::castToArray($target);
-        }));
-
-        $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(1);
-        if (count($plugins) === 0) {
-            echo 'No Plugins';
-            die();
-        }
-        echo $twig->render('pluginsTable.html.twig', ['plugins' => $plugins]);
+        $this->twig = $twig;
     }
 
-
-    /**
-     * Initializes a database by creating a connection to a database, creating a table, and inserting initial data
-     */
-    public function initDB()
-    {
-        // instantiate database
+    public function renderRowCount(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         $db = new DB();
         $db->connect();
-
-        // create table
-        $db->createTable();
+        $count = $db->countRows('plugins');
         $db->closeConnection();
+
+        return $this->twig->render($response, 'admin.twig', ['count' => $count, 'table_name' => 'plugins']);
     }
 
-    public function insertData()
-    {
+
+    public function insertData(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $args
+    ): ResponseInterface {
         // connect to DB
         $db = new DB();
         $db->connect();
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(4);
+        $plugins = $pluginCollection->getPlugins(2);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {
@@ -89,7 +69,7 @@ class Controller
                 if (isset($_GET) && isset($_GET['get'])) {
                     $contributors = preg_match('/^contributors$/', $_GET['get']);
                 }
-                // FIXME:  Change contributors table's primary key to contributor_login
+// FIXME:  Change contributors table's primary key to contributor_login
                 if ($contributors) {
                     // get contributors in array form
                     $contributorCollection = new ContributorCollection($plugin->contributors_api_url, $plugin->name);
@@ -119,8 +99,8 @@ class Controller
                 }
             }
         }
-
-        $db->countRows('plugins');
+        $count = $db->countRows('plugins');
         $db->closeConnection();
+        return $this->twig->render($response, 'admin.twig', ['count' => $count, 'table_name' => 'plugins']);
     }
 }
