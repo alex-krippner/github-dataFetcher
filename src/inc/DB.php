@@ -76,6 +76,25 @@ class DB
         }
     }
 
+    public function queryDB($query, $data = [])
+    {
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        if (isset($data)) {
+            $this->pdo->beginTransaction();
+
+            try {
+                $stmt = $this->pdo->prepare($query);
+                $stmt->execute($data);
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (\Exception $e) {
+                $this->pdo->rollBack();
+                echo "Failed: " . $e->getMessage();
+            }
+        }
+    }
+
+
     public function countRows($tableName)
     {
         return count($this->pdo->query('SELECT * FROM ' . $tableName)->fetchAll(PDO::FETCH_ASSOC));
