@@ -6,6 +6,7 @@ use PDO;
 use PDOException;
 
 // TODO: Write migration logic
+// TODO: Consider moving the connection logic to the constructor
 // https://www.sqlite.org/lang_altertable.html
 
 /**
