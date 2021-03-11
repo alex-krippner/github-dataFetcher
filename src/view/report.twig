@@ -1,0 +1,27 @@
+{% extends "base.twig" %}
+
+{% block content %}
+<h2>{{pageName}}</h2>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            {% for key, value in data[0] %}
+            <td>{{ key | capitalize | replace({'_': ' '})}}</td>
+            {% endfor %}
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for datum in data %}
+        <tr>
+            {% for key, d in datum %}
+            <td>{{d}}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

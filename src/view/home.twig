@@ -2,12 +2,12 @@
 
 {% block content %}
 <h2>Oversight</h2>
-<form>
+<form id="report-form" action="/report" method="GET">
     <div class="mb-3">
         <label for="search" class="form-label">Produce Report</label>
-        <input type="text" class="form-control" id="search">
+        <input type="text" class="form-control" id="search" name="search">
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button id="report__submit-btn" type="submit" class="btn btn-primary">Submit</button>
 </form>
 
 {% endblock %}

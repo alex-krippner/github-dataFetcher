@@ -101,6 +101,30 @@ class DB
         return count($this->pdo->query('SELECT * FROM ' . $tableName)->fetchAll(PDO::FETCH_ASSOC));
     }
 
+    public function getReportData($report_subject)
+    {
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $this->pdo->prepare("SELECT * FROM plugins WHERE plugin_name = :plugin_name");
+        $clean = array();
+
+        if (isset($report_subject)) {
+            $this->pdo->beginTransaction();
+
+            try {
+                if (ctype_alnum($report_subject)) {
+                    $clean['report_subject'] = $report_subject;
+                }
+
+                $stmt->bindParam(":plugin_name", $clean['report_subject'], PDO::PARAM_STR, 32);
+                $stmt->execute();
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (\Exception $e) {
+                $this->pdo->rollBack();
+                echo "Failed: " . $e->getMessage();
+            }
+        }
+    }
+
 
     /**
      *

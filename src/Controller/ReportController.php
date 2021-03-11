@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 
-class IssuesController
+class ReportController
 {
     private $twig;
 
@@ -16,20 +16,21 @@ class IssuesController
         $this->twig = $twig;
     }
 
-    public function showTable(
+    public function getReport(
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $args
     ): ResponseInterface {
+        $plugin_name = $_REQUEST['search'];
+
         $db = new DB();
         $db->connect();
-        $query = 'SELECT * FROM issues ORDER BY plugin_name ASC, created_at ASC ';
-        $issues = $db->queryDB($query);
+        $reportData = $db->getReportData($plugin_name);
         $db->closeConnection();
-        if (count($issues) === 0) {
-            echo 'No Plugins';
+        if (!isset($reportData)) {
+            echo "Couldn't produce report";
             die();
         }
-        return $this->twig->render($response, 'table.twig', ['pageName' => 'Issues', 'data' => $issues]);
+        return $this->twig->render($response, 'report.twig', ['pageName' => 'Report', 'data' => $reportData]);
     }
 }

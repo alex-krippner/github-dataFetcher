@@ -13,5 +13,6 @@ return function (App $app) {
     $app->get('/admin/update', \Mon\Oversight\Controller\AdminController::class . ':insertData');
     $app->get('/contributors', \Mon\Oversight\Controller\ContributorsController::class . ':showTable');
     $app->get('/issues', \Mon\Oversight\Controller\IssuesController::class . ':showTable');
+    $app->get('/report', \Mon\Oversight\Controller\ReportController::class . ':getReport');
 };
 
