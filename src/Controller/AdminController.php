@@ -41,24 +41,63 @@ class AdminController
         // connect to DB
         $db = new DB();
         $db->connect();
+        $db->createTable();
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(2);
+        $plugins = $pluginCollection->getPlugins(50);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {
             foreach ($plugins as $plugin) {
                 $query = "
-                INSERT INTO plugins (plugin_name, owner_login, open_issues_count, forks_count, commits_count )
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO plugins (
+                plugin_name, 
+                owner_login,
+                repo_link,
+                description,
+                date_created,
+                date_pushed,
+                date_updated,
+                contributors_count,
+                all_issues_count,
+                open_issues_count,
+                oldest_issue,
+                newest_issue,
+                forks_count,
+                commits_count)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)
                 ON CONFLICT (plugin_name) DO UPDATE SET
                     owner_login=excluded.owner_login,
+                    repo_link=excluded.repo_link,
+                    description=excluded.description,                                                       
+                    date_created=excluded.date_created,
+                    date_pushed=excluded.date_pushed,
+                    date_updated=excluded.date_updated,
+                    contributors_count=excluded.contributors_count,
+                    all_issues_count=excluded.all_issues_count,
+                    oldest_issue=excluded.oldest_issue,                                 
+                    newest_issue=excluded.newest_issue,                                                        
                     open_issues_count=excluded.open_issues_count,
                     forks_count=excluded.forks_count,
                     commits_count=excluded.commits_count
                 ";
-                $data = [$plugin->name, 'cosmocode', $plugin->open_issues_count, $plugin->fork, $plugin->commits];
+                $data = [
+                    $plugin->name,
+                    $plugin->owner_login,
+                    $plugin->repo_link,
+                    $plugin->description,
+                    $plugin->date_created,
+                    $plugin->date_pushed,
+                    $plugin->date_updated,
+                    $plugin->contributors_count,
+                    $plugin->all_issues,
+                    $plugin->open_issues_count,
+                    $plugin->oldest_issue,
+                    $plugin->newest_issue,
+                    $plugin->forks_count,
+                    $plugin->commits_count
+                ];
 
                 // insert plugin data
                 $db->insertData($query, $data);
@@ -101,6 +140,6 @@ class AdminController
         }
         $count = $db->countRows('plugins');
         $db->closeConnection();
-        return $this->twig->render($response, 'admin.twig', ['count' => $count, 'table_name' => 'plugins']);
+        return $this->twig->render($response, 'update.twig', ['count' => $count, 'table_name' => 'plugins']);
     }
 }

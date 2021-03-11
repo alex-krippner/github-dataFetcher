@@ -1,18 +1,6 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="main.css" rel="stylesheet" type="text/css"/>
-    <title>Oversight</title>
-</head>
-<body>
+{% extends "base.twig" %}
 
-<h1>Oversight</h1>
+{% block content %}
 <h2>Admin Page</h2>
-<a href="/">Home</a>
-
-
-<p>There are {{count}} {{table_name}}</p>
-</body>
-</html>
+<a href="/admin/update">Update plugins table</a>
+{% endblock %}

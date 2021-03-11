@@ -20,7 +20,6 @@ class HomeController
         ResponseInterface $response,
         array $args
     ): ResponseInterface {
-
         return $this->twig->render($response, 'home.twig');
     }
 }

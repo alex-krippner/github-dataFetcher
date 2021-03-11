@@ -23,7 +23,7 @@ class PluginsController
     ): ResponseInterface {
         $db = new DB();
         $db->connect();
-        $query = 'SELECT * FROM plugins ';
+        $query = 'SELECT * FROM plugins ORDER BY open_issues_count DESC ';
         $plugins = $db->queryDB($query);
         $db->closeConnection();
         if (count($plugins) === 0) {

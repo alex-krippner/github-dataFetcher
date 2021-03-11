@@ -9,40 +9,44 @@ use Mon\Oversight\inc\Services;
 class Plugin
 {
     public $name;
-    public $link;
+    public $owner_login;
+    public $repo_link;
     public $description;
-    public $created;
-    public $pushed;
+    public $date_created;
+    public $date_pushed;
+    public $date_updated;
     public $open_issues_count;
-    public $fork;
-    public $contributors;
+    public $forks_count;
+    public $contributors_count;
     public $all_issues;
     public $oldest_issue;
     public $newest_issue;
-    public $commits;
+    public $commits_count;
     public $average_commits_per_year;
     public $contributors_api_url;
 
     function __construct($pluginData)
     {
         $this->name = $pluginData['name'];
-        $this->link = sprintf('<a href="%s">%s</a>', $pluginData['html_url'], $pluginData['name']);
+        $this->owner_login = $pluginData['owner']['login'];
+        $this->repo_link = $pluginData['html_url'];
         $this->description = $pluginData['description'];
-        $this->created = date('Y-m', strtotime($pluginData['created_at']));
-        $this->pushed = date('Y-m', strtotime($pluginData['pushed_at']));
+        $this->date_created = date('Y-m', strtotime($pluginData['created_at']));
+        $this->date_pushed = date('Y-m', strtotime($pluginData['pushed_at']));
+        $this->date_updated = date('Y-m-d', strtotime($pluginData['updated_at']));
         $this->open_issues_count = $pluginData['open_issues_count'];
-        $this->fork = $pluginData['fork'] ? 'fork' : '';
-        $this->contributors = Services::getApiData($pluginData['contributors_url'], 'count');
+        $this->forks_count = $pluginData['forks_count'];
+        $this->contributors_count = Services::getApiData($pluginData['contributors_url'], 'count');
         $this->all_issues = Services::getApiData(str_replace('{/number}', '?per_page=100&state=all',
             $pluginData['issues_url']), 'count');
-        $this->oldest_issue = $this->getPluginIssueByAge('oldest',
-            str_replace('{/number}', '?per_page=100&state=all', $pluginData['issues_url']));
-        $this->newest_issue = $this->getPluginIssueByAge('newest',
-            str_replace('{/number}', '?per_page=100&state=all', $pluginData['issues_url']));
-        $this->commits = $this->getPluginCommitsCount(str_replace('{/sha}', '?per_page=100&state=all',
+        $this->oldest_issue = $pluginData['open_issues'] ? $this->getPluginIssueByAge('oldest',
+            str_replace('{/number}', '?per_page=100&state=all', $pluginData['issues_url'])) : 'No Open Issues';
+        $this->newest_issue = $pluginData['open_issues'] ? $this->getPluginIssueByAge('newest',
+            str_replace('{/number}', '?per_page=100&state=all', $pluginData['issues_url'])) : 'No Open Issues';
+        $this->commits_count = $this->getPluginCommitsCount(str_replace('{/sha}', '?per_page=100&state=all',
             $pluginData['commits_url']));
         $this->average_commits_per_year = $this->calcAvgCommits(str_replace('{/sha}', '?per_page=100&state=all',
-            $pluginData['commits_url']), $this->created);
+            $pluginData['commits_url']), $this->date_created);
         $this->contributors_api_url = $pluginData['contributors_url'];
     }
 
@@ -52,19 +56,51 @@ class Plugin
      * @return string the title of the issue
      */
 
+    // TODO: Add check if state is open
+    // FIXME: Not all the oldest issues are displayed
+
     private function getPluginIssueByAge($age, $url)
     {
         $issueTitle = '';
         $issuesArray = Services::getApiData($url, '');
-        if (!$issuesArray) {
-            return 'No issues';
-        }
+
         if ($age === 'newest') {
-            $issueTitle = $issuesArray[0]['title'];
+            $tempNewest = 0;
+            foreach ($issuesArray as $key => $issue) {
+                $currentIssueTimestamp = strtotime($issue['created_at']);
+                if ($issue['state'] === 'closed') {
+                    continue;
+                }
+
+                $tempNewest = $currentIssueTimestamp >= $tempNewest ? $currentIssueTimestamp : $tempNewest;
+
+                if ($tempNewest <= $currentIssueTimestamp) {
+                    $issueTitle = "'" . $issue['title'] . "'" . ' created at ' . date('Y-m-d H:m',
+                            strtotime($issue['created_at']));
+                }
+            }
         }
 
         if ($age === 'oldest') {
-            $issueTitle = $issuesArray[count($issuesArray) - 1]['title'];
+            $tempOldest = 0;
+            $oldestFirst = array_reverse($issuesArray);
+            foreach ($oldestFirst as $key => $issue) {
+                $currentIssueTimestamp = strtotime($issue['created_at']);
+                if ($issue['state'] === 'closed') {
+                    continue;
+                }
+                if ($key === 0) {
+                    $tempOldest = $currentIssueTimestamp;
+                } else {
+                    $tempOldest = $currentIssueTimestamp <= $tempOldest ? $currentIssueTimestamp : $tempOldest;
+                }
+
+
+                if ($tempOldest >= $currentIssueTimestamp) {
+                    $issueTitle = "'" . $issue['title'] . "'" . ' created at ' . date('Y-m-d-h-m',
+                            strtotime($issue['created_at']));
+                }
+            }
         }
 
         return $issueTitle;

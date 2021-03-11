@@ -22,6 +22,7 @@ $settings['twig'] = [
         __DIR__ . '/../src/view',
     ],
     // Twig environment options
+    // TODO: When enabling cache create tmp directory
     'options' => [
         // Should be set to true in production
         'cache_enabled' => false,

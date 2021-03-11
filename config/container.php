@@ -7,6 +7,9 @@ use Slim\Middleware\ErrorMiddleware;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 
+// TODO: Consider using PHP-DI bridge instead of Slim's AppFactory
+// https://php-di.org/doc/frameworks/slim.html
+
 return [
     'settings' => function () {
         return require __DIR__ . '/settings.php';
