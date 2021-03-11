@@ -108,7 +108,6 @@ class AdminController
                 if (isset($_GET) && isset($_GET['get'])) {
                     $contributors = preg_match('/^contributors$/', $_GET['get']);
                 }
-// FIXME:  Change contributors table's primary key to contributor_login
                 if ($contributors) {
                     // get contributors in array form
                     $contributorCollection = new ContributorCollection($plugin->contributors_api_url, $plugin->name);
@@ -116,13 +115,7 @@ class AdminController
                     foreach ($contributors as $contributor) {
                         $query = "
                         INSERT INTO contributors (plugin_name, contributor_login, name, email, company)
-                        VALUES (?, ?, ?, ?, ?)
-                        ON CONFLICT (plugin_name) DO UPDATE SET
-                            contributor_login=excluded.contributor_login,
-                            name=excluded.name,
-                            email=excluded.email,
-                            company=excluded.company
-                ";
+                        VALUES (?, ?, ?, ?, ?)";
 
                         $data = [
                             $contributor->plugin_name,

@@ -97,7 +97,7 @@ class Plugin
 
 
                 if ($tempOldest >= $currentIssueTimestamp) {
-                    $issueTitle = "'" . $issue['title'] . "'" . ' created at ' . date('Y-m-d-h-m',
+                    $issueTitle = "'" . $issue['title'] . "'" . ' created at ' . date('Y-m-d H:m',
                             strtotime($issue['created_at']));
                 }
             }

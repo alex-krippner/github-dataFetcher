@@ -20,12 +20,12 @@ CREATE TABLE IF NOT EXISTS plugins
 
 CREATE TABLE IF NOT EXISTS contributors
 (
-    plugin_name       TEXT PRIMARY KEY,
+    plugin_name       TEXT,
     contributor_login TEXT,
     name              TEXT,
     email             TEXT,
     company           TEXT,
-    FOREIGN KEY (contributor_login) REFERENCES plugins (contributor_login)
+    FOREIGN KEY (plugin_name) REFERENCES plugins (plugin_name)
 );
 
 
