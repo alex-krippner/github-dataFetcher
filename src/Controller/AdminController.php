@@ -5,6 +5,7 @@ namespace Mon\Oversight\Controller;
 use Mon\Oversight\inc\DB;
 use Mon\Oversight\Model\ContributorCollection;
 use Mon\Oversight\Model\PluginCollection;
+use Mon\Oversight\Model\IssuesCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
@@ -45,7 +46,7 @@ class AdminController
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(50);
+        $plugins = $pluginCollection->getPlugins(2);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {
@@ -123,6 +124,46 @@ class AdminController
                             $contributor->name,
                             $contributor->email,
                             $contributor->company,
+                        ];
+
+                        // insert plugin data
+                        $db->insertData($query, $data);
+                    }
+                }
+
+                $issues = null;
+                // insert contributors data
+                if (isset($_GET) && isset($_GET['get'])) {
+                    $issues = preg_match('/^issues$/', $_GET['get']);
+                }
+                if ($issues) {
+                    // get contributors in array form
+                    $issuesCollection = new IssuesCollection(str_replace('{/number}', '?per_page=100&state=all',
+                        $plugin->issues_url), $plugin->name);
+                    $issues = $issuesCollection->getIssuesCollection();
+                    foreach ($issues as $issue) {
+                        $query = "
+                        INSERT INTO issues (plugin_name, issues_node_id, title, body, state, issue_number, user_login, created_at)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                        ON CONFLICT (issues_node_id) DO UPDATE SET
+                        title=excluded.title,
+                        body=excluded.body,
+                        state=excluded.state,
+                        issue_number=excluded.issue_number,
+                        user_login=excluded.user_login, 
+                        created_at=excluded.created_at
+                        ";
+
+                        $data = [
+                            $issue->plugin_name,
+                            $issue->node_id,
+                            $issue->title,
+                            $issue->body,
+                            $issue->state,
+                            $issue->issue_number,
+                            $issue->user_login,
+                            $issue->created_at
+
                         ];
 
                         // insert plugin data

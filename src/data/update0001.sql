@@ -38,8 +38,9 @@ CREATE TABLE IF NOT EXISTS issues
     body           TEXT,
     state          TEXT,
     issue_number   INTEGER,
-    issue_login    TEXT,
+    user_login     TEXT,
     plugin_name    TEXT,
+    created_at     TEXT,
     FOREIGN KEY (plugin_name) REFERENCES plugins (plugin_name)
 );
 

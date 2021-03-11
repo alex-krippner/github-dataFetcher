@@ -12,5 +12,6 @@ return function (App $app) {
     $app->get('/admin', \Mon\Oversight\Controller\AdminController::class . ':renderRowCount');
     $app->get('/admin/update', \Mon\Oversight\Controller\AdminController::class . ':insertData');
     $app->get('/contributors', \Mon\Oversight\Controller\ContributorsController::class . ':showTable');
+    $app->get('/issues', \Mon\Oversight\Controller\IssuesController::class . ':showTable');
 };
 
