@@ -22,6 +22,31 @@ class ReportController
         array $args
     ): ResponseInterface {
         $plugin_name = $_REQUEST['search'];
+        /**
+         * TODO: STATS TO GET
+         *
+         * CODE STATS:
+         *  AVERAGE COMMITS PER YEAR -- DONE
+         *  COMMITS IN THE LAST TWO YEARS -- OMIT FOR NOW
+         *
+         * CODE STATS:
+         *  OPEN PR -- DONE
+         *  CLOSED PR -- DONE
+         *
+         * COMMUNITY STATS
+         *  CONTRIBUTORS COUNT
+         *  FORKS
+         *  STARS
+         *  WATCHERS
+         *  OPEN ISSUES
+         *  CLOSED ISSUES
+         *  OPENED IN THE LAST TWO YEARS
+         *  CLOSED IN TEH LAST TWO YEARS
+         *
+         *
+         *
+         *
+         */
 
         $db = new DB();
         $db->connect();

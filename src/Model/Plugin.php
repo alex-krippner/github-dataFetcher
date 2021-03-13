@@ -22,9 +22,9 @@ class Plugin
     public $oldest_issue;
     public $newest_issue;
     public $commits_count;
-    public $average_commits_per_year;
     public $contributors_api_url;
     public $issues_url;
+    public $pulls;
 
     function __construct($pluginData)
     {
@@ -41,15 +41,17 @@ class Plugin
         $this->all_issues = Services::getApiData(str_replace('{/number}', '?per_page=100&state=all',
             $pluginData['issues_url']), 'count');
         $this->oldest_issue = $pluginData['open_issues'] ? $this->getPluginIssueByAge('oldest',
-            str_replace('{/number}', '?per_page=100&state=all', $pluginData['issues_url'])) : 'No Open Issues';
+            str_replace('{/number}', '?per_page=100&state=open&sort=created&direction=asc',
+                $pluginData['issues_url'])) : 'No Open Issues';
         $this->newest_issue = $pluginData['open_issues'] ? $this->getPluginIssueByAge('newest',
-            str_replace('{/number}', '?per_page=100&state=all', $pluginData['issues_url'])) : 'No Open Issues';
+            str_replace('{/number}', '?per_page=100&state=open&sort=created&direction=desc',
+                $pluginData['issues_url'])) : 'No Open Issues';
         $this->commits_count = $this->getPluginCommitsCount(str_replace('{/sha}', '?per_page=100&state=all',
             $pluginData['commits_url']));
-        $this->average_commits_per_year = $this->calcAvgCommits(str_replace('{/sha}', '?per_page=100&state=all',
-            $pluginData['commits_url']), $this->date_created);
         $this->contributors_api_url = $pluginData['contributors_url'];
         $this->issues_url = $pluginData['issues_url'];
+        $this->pulls = Services::getApiData(str_replace('{/number}', '?per_page=100&state=all',
+            $pluginData['pulls_url']), '');
     }
 
     /**
@@ -58,51 +60,19 @@ class Plugin
      * @return string the title of the issue
      */
 
-    // TODO: Add check if state is open
-    // FIXME: Not all the oldest issues are displayed
-
     private function getPluginIssueByAge($age, $url)
     {
         $issueTitle = '';
         $issuesArray = Services::getApiData($url, '');
 
         if ($age === 'newest') {
-            $tempNewest = 0;
-            foreach ($issuesArray as $key => $issue) {
-                $currentIssueTimestamp = strtotime($issue['created_at']);
-                if ($issue['state'] === 'closed') {
-                    continue;
-                }
-
-                $tempNewest = $currentIssueTimestamp >= $tempNewest ? $currentIssueTimestamp : $tempNewest;
-
-                if ($tempNewest <= $currentIssueTimestamp) {
-                    $issueTitle = "'" . $issue['title'] . "'" . ' created at ' . date('Y-m-d H:m',
-                            strtotime($issue['created_at']));
-                }
-            }
+            $issueTitle = "'" . $issuesArray[0]['title'] . "'" . ' created at ' . date('Y-m-d H:m',
+                    strtotime($issuesArray[0]['created_at']));
         }
 
         if ($age === 'oldest') {
-            $tempOldest = 0;
-            $oldestFirst = array_reverse($issuesArray);
-            foreach ($oldestFirst as $key => $issue) {
-                $currentIssueTimestamp = strtotime($issue['created_at']);
-                if ($issue['state'] === 'closed') {
-                    continue;
-                }
-                if ($key === 0) {
-                    $tempOldest = $currentIssueTimestamp;
-                } else {
-                    $tempOldest = $currentIssueTimestamp <= $tempOldest ? $currentIssueTimestamp : $tempOldest;
-                }
-
-
-                if ($tempOldest >= $currentIssueTimestamp) {
-                    $issueTitle = "'" . $issue['title'] . "'" . ' created at ' . date('Y-m-d H:m',
-                            strtotime($issue['created_at']));
-                }
-            }
+            $issueTitle = "'" . $issuesArray[0]['title'] . "'" . ' created at ' . date('Y-m-d H:m',
+                    strtotime($issuesArray[0]['created_at']));
         }
 
         return $issueTitle;
@@ -120,18 +90,4 @@ class Plugin
         return !$commitsArray ? 0 : count($commitsArray);
     }
 
-    /**
-     * @param string $url github REST API url with parameters
-     * @param string $repoCreatedDate the YYYY-MM the repo was created
-     * @return int the average commits per year
-     */
-
-
-    private function calcAvgCommits($url, $repoCreatedDate)
-    {
-        $commitsCount = $this->getPluginCommitsCount($url);
-
-        return $commitsCount === 0 ? 'No commits' : (date('Y') - date('Y',
-                strtotime($repoCreatedDate)));
-    }
 }

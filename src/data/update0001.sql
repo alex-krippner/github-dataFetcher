@@ -55,3 +55,18 @@ CREATE TABLE IF NOT EXISTS owners
     company     TEXT,
     FOREIGN KEY (owner_login) REFERENCES plugins (owner_login)
 );
+
+CREATE TABLE IF NOT EXISTS pulls
+(
+    pull_node_id TEXT PRIMARY KEY,
+    plugin_name  TEXT,
+    title        TEXT,
+    state        TEXT,
+    user_login   TEXT,
+    body         TEXT,
+    created_at   TEXT,
+    closed_at    TEXT,
+    merged_at    TEXT,
+    pull_url     TEXT,
+    FOREIGN KEY (plugin_name) REFERENCES plugins (plugin_name)
+)

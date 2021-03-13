@@ -104,7 +104,16 @@ class DB
     public function getReportData($report_subject)
     {
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $this->pdo->prepare("SELECT * FROM plugins WHERE plugin_name = :plugin_name");
+        $stmt = $this->pdo->prepare("
+            SELECT plugins.plugin_name, owner_login, repo_link, description,
+                   round((commits_count / CAST((DATE('now') - date_created) AS FLOAT)), 2) as 'Commits/Year',            
+				   SUM (CASE WHEN pulls.state = 'closed' THEN 1 ELSE 0 END) AS 'Closed pulls',
+				   SUM (CASE WHEN pulls.state = 'open' THEN 1 ELSE 0 END) AS 'Open pulls'
+				   FROM plugins
+                   INNER JOIN pulls ON
+                   plugins.plugin_name = pulls.plugin_name
+                   WHERE plugins.plugin_name =  :plugin_name;
+            ");
         $clean = array();
 
         if (isset($report_subject)) {

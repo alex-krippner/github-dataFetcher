@@ -6,6 +6,7 @@ use Mon\Oversight\inc\DB;
 use Mon\Oversight\Model\ContributorCollection;
 use Mon\Oversight\Model\PluginCollection;
 use Mon\Oversight\Model\IssuesCollection;
+use Mon\Oversight\Model\PullsCollection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
@@ -103,6 +104,43 @@ class AdminController
                 // insert plugin data
                 $db->insertData($query, $data);
 
+                if (isset($plugin->pulls) && is_array($plugin->pulls)) {
+                    $pullsCollection = new PullsCollection($plugin->pulls, $plugin->name);
+                    $pullsArray = $pullsCollection->getPullsCollection();
+                    foreach ($pullsArray as $pull) {
+                        $query = "
+                        INSERT INTO pulls (pull_node_id, plugin_name, title, state, user_login, body, created_at, closed_at, merged_at, pull_url)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        ON CONFLICT (pull_node_id) DO UPDATE SET
+                        plugin_name=excluded.plugin_name,
+                        title=excluded.title,
+                        state=excluded.state,
+                        user_login=excluded.user_login,
+                        body=excluded.body, 
+                        created_at=excluded.created_at,
+                        closed_at=excluded.closed_at,
+                        merged_at=excluded.merged_at,
+                        pull_url=excluded.pull_url
+                        ";
+
+                        $data = [
+                            $pull->node_id,
+                            $pull->plugin_name,
+                            $pull->title,
+                            $pull->state,
+                            $pull->user_login,
+                            $pull->body,
+                            $pull->created_at,
+                            $pull->closed_at,
+                            $pull->merged_at,
+                            $pull->html_url
+                        ];
+
+                        // insert pulls data
+                        $db->insertData($query, $data);
+                    }
+                }
+
 
                 $contributors = null;
                 // insert contributors data
@@ -126,18 +164,18 @@ class AdminController
                             $contributor->company,
                         ];
 
-                        // insert plugin data
+                        // insert contributors data
                         $db->insertData($query, $data);
                     }
                 }
 
                 $issues = null;
-                // insert contributors data
+                // insert issues data
                 if (isset($_GET) && isset($_GET['get'])) {
                     $issues = preg_match('/^issues$/', $_GET['get']);
                 }
                 if ($issues) {
-                    // get contributors in array form
+                    // get issues in array form
                     $issuesCollection = new IssuesCollection(str_replace('{/number}', '?per_page=100&state=all',
                         $plugin->issues_url), $plugin->name);
                     $issues = $issuesCollection->getIssuesCollection();
@@ -166,7 +204,7 @@ class AdminController
 
                         ];
 
-                        // insert plugin data
+                        // insert issues  data
                         $db->insertData($query, $data);
                     }
                 }
