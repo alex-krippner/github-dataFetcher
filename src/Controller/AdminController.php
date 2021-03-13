@@ -61,14 +61,13 @@ class AdminController
                 date_created,
                 date_pushed,
                 date_updated,
-                contributors_count,
                 all_issues_count,
                 open_issues_count,
                 oldest_issue,
                 newest_issue,
                 forks_count,
                 commits_count)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)
                 ON CONFLICT (plugin_name) DO UPDATE SET
                     owner_login=excluded.owner_login,
                     repo_link=excluded.repo_link,
@@ -76,7 +75,6 @@ class AdminController
                     date_created=excluded.date_created,
                     date_pushed=excluded.date_pushed,
                     date_updated=excluded.date_updated,
-                    contributors_count=excluded.contributors_count,
                     all_issues_count=excluded.all_issues_count,
                     oldest_issue=excluded.oldest_issue,                                 
                     newest_issue=excluded.newest_issue,                                                        
@@ -92,7 +90,6 @@ class AdminController
                     $plugin->date_created,
                     $plugin->date_pushed,
                     $plugin->date_updated,
-                    $plugin->contributors_count,
                     $plugin->all_issues,
                     $plugin->open_issues_count,
                     $plugin->oldest_issue,

@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS plugins
     date_created       TEXT,
     date_pushed        TEXT,
     date_updated       TEXT,
-    contributors_count INTEGER,
     all_issues_count   INTEGER,
     oldest_issue       TEXT,
     newest_issue       TEXT,

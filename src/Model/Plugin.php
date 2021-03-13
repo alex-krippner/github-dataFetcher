@@ -17,7 +17,6 @@ class Plugin
     public $date_updated;
     public $open_issues_count;
     public $forks_count;
-    public $contributors_count;
     public $all_issues;
     public $oldest_issue;
     public $newest_issue;
@@ -37,7 +36,6 @@ class Plugin
         $this->date_updated = date('Y-m-d', strtotime($pluginData['updated_at']));
         $this->open_issues_count = $pluginData['open_issues_count'];
         $this->forks_count = $pluginData['forks_count'];
-        $this->contributors_count = Services::getApiData($pluginData['contributors_url'], 'count');
         $this->all_issues = Services::getApiData(str_replace('{/number}', '?per_page=100&state=all',
             $pluginData['issues_url']), 'count');
         $this->oldest_issue = $pluginData['open_issues'] ? $this->getPluginIssueByAge('oldest',

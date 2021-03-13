@@ -105,14 +105,15 @@ class DB
     {
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $stmt = $this->pdo->prepare("
-            SELECT plugins.plugin_name, owner_login, repo_link, description,
-                   round((commits_count / CAST((DATE('now') - date_created) AS FLOAT)), 2) as 'Commits/Year',            
-				   SUM (CASE WHEN pulls.state = 'closed' THEN 1 ELSE 0 END) AS 'Closed pulls',
-				   SUM (CASE WHEN pulls.state = 'open' THEN 1 ELSE 0 END) AS 'Open pulls'
-				   FROM plugins
-                   INNER JOIN pulls ON
-                   plugins.plugin_name = pulls.plugin_name
-                   WHERE plugins.plugin_name =  :plugin_name;
+            SELECT p.plugin_name AS 'Plugin', owner_login AS 'Owner', repo_link AS 'URL', description 'Description',
+                   ROUND((commits_count / CAST((DATE('now') - date_created) AS FLOAT)), 2) as 'Commits/Year',
+				   SUM (CASE WHEN pulls.state = 'open' THEN 1 ELSE 0 END) AS 'Open Pull Requests',
+				   SUM (CASE WHEN pulls.state = 'closed' THEN 1 ELSE 0 END) AS 'Closed Pull Requests',
+                   COUNT(contributors.plugin_name) AS 'Contributors'
+				   FROM plugins p
+                   LEFT JOIN pulls ON p.plugin_name = pulls.plugin_name
+				   LEFT JOIN contributors ON p.plugin_name = contributors.plugin_name
+                   WHERE p.plugin_name =  :plugin_name;
             ");
         $clean = array();
 

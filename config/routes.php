@@ -14,5 +14,6 @@ return function (App $app) {
     $app->get('/contributors', \Mon\Oversight\Controller\ContributorsController::class . ':showTable');
     $app->get('/issues', \Mon\Oversight\Controller\IssuesController::class . ':showTable');
     $app->get('/report', \Mon\Oversight\Controller\ReportController::class . ':getReport');
+    $app->get('/pull-requests', \Mon\Oversight\Controller\PullsController::class .  ':getPulls');
 };
 

@@ -1,14 +1,14 @@
 {% extends "base.twig" %}
 
 {% block content %}
-<h2>{{data[0]['plugin_name']}}</h2>
+<h2>{{data[0]['Plugin']}}</h2>
 
 <div class="container">
     <table class="table table-striped">
         <thead>
         <tr>
             {% for key, value in data[0] %}
-            <td>{{ key | capitalize | replace({'_': ' '})}}</td>
+            <td>{{ key }}</td>
             {% endfor %}
         </tr>
         </thead>

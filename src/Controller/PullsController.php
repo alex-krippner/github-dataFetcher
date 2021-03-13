@@ -8,29 +8,30 @@ use Slim\Views\Twig;
 
 use Mon\Oversight\inc\DB;
 
-class PluginsController
+class PullsController
 {
     private $twig;
 
-    public function __construct(Twig $twig)
+    public function  __construct(Twig $twig)
     {
         $this->twig = $twig;
     }
 
-    public function getPlugins(
+    public function getPulls(
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $args
-    ): ResponseInterface {
+    ): ResponseInterface
+    {
         $db = new DB();
         $db->connect();
-        $query = 'SELECT * FROM plugins ORDER BY open_issues_count DESC ';
-        $plugins = $db->queryDB($query);
+        $query = "SELECT * FROM pulls ORDER BY plugin_name DESC";
+        $pulls = $db->queryDB($query);
         $db->closeConnection();
-        if (count($plugins) === 0) {
-            echo 'No Plugins';
+        if(count($pulls) === 0) {
+            echo 'No pull requests found';
             die();
         }
-        return $this->twig->render($response, 'table.twig', ['pageName' => 'Plugins', 'data' => $plugins]);
+        return $this->twig->render($response, 'table.twig',['pageName'=> 'Pull Requests', 'data' => $pulls]);
     }
 }
