@@ -34,12 +34,12 @@ class ReportController
          *  CLOSED PR -- DONE
          *
          * COMMUNITY STATS
-         *  CONTRIBUTORS COUNT
-         *  FORKS
-         *  STARS
-         *  WATCHERS
-         *  OPEN ISSUES
-         *  CLOSED ISSUES
+         *  CONTRIBUTORS COUNT -- DONE
+         *  FORKS -- DONE
+         *  STARS -- DONE
+         *  WATCHERS -- DONE
+         *  OPEN ISSUES -- DONE
+         *  CLOSED ISSUES -- DONE
          *  OPENED IN THE LAST TWO YEARS
          *  CLOSED IN TEH LAST TWO YEARS
          *

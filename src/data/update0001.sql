@@ -10,11 +10,14 @@ CREATE TABLE IF NOT EXISTS plugins
     date_pushed        TEXT,
     date_updated       TEXT,
     all_issues_count   INTEGER,
-    oldest_issue       TEXT,
-    newest_issue       TEXT,
     open_issues_count  INTEGER,
+    closed_issues_count INTEGER,
+    newest_issue       TEXT,
+    oldest_issue       TEXT,
     commits_count      INTEGER,
-    forks_count        INTEGER
+    forks_count        INTEGER,
+    stars_count        INTEGER,
+    watchers_count     INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS contributors

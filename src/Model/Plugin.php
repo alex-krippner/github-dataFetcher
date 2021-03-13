@@ -16,6 +16,7 @@ class Plugin
     public $date_pushed;
     public $date_updated;
     public $open_issues_count;
+    public $closed_issues_count;
     public $forks_count;
     public $all_issues;
     public $oldest_issue;
@@ -24,6 +25,8 @@ class Plugin
     public $contributors_api_url;
     public $issues_url;
     public $pulls;
+    public $stars_count;
+    public $watchers_count;
 
     function __construct($pluginData)
     {
@@ -34,10 +37,12 @@ class Plugin
         $this->date_created = date('Y-m', strtotime($pluginData['created_at']));
         $this->date_pushed = date('Y-m', strtotime($pluginData['pushed_at']));
         $this->date_updated = date('Y-m-d', strtotime($pluginData['updated_at']));
-        $this->open_issues_count = $pluginData['open_issues_count'];
-        $this->forks_count = $pluginData['forks_count'];
         $this->all_issues = Services::getApiData(str_replace('{/number}', '?per_page=100&state=all',
             $pluginData['issues_url']), 'count');
+        $this->open_issues_count = $pluginData['open_issues_count'];
+        $this->closed_issues_count = $this->all_issues - $this->open_issues_count;
+        $this->forks_count = $pluginData['forks_count'];
+
         $this->oldest_issue = $pluginData['open_issues'] ? $this->getPluginIssueByAge('oldest',
             str_replace('{/number}', '?per_page=100&state=open&sort=created&direction=asc',
                 $pluginData['issues_url'])) : 'No Open Issues';
@@ -50,6 +55,8 @@ class Plugin
         $this->issues_url = $pluginData['issues_url'];
         $this->pulls = Services::getApiData(str_replace('{/number}', '?per_page=100&state=all',
             $pluginData['pulls_url']), '');
+        $this->stars_count = $pluginData['stargazers_count'];
+        $this->watchers_count = $pluginData['watchers_count'];
     }
 
     /**

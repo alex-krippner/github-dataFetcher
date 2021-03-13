@@ -11,6 +11,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 
+/**
+ * TODO: Write logic to update plugin repos data
+ * create array of plugin repo names
+ * loop array and fetch repo data like in the form of repos.json and save in Plugin class object
+ * refactor dependencies of Plugin class
+ * write logic to update at intervals or when repos have been modified or both?
+ */
 
 class AdminController
 {
@@ -47,7 +54,7 @@ class AdminController
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(2);
+        $plugins = $pluginCollection->getPlugins(30);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {
@@ -63,11 +70,15 @@ class AdminController
                 date_updated,
                 all_issues_count,
                 open_issues_count,
-                oldest_issue,
+                closed_issues_count,
                 newest_issue,
+                oldest_issue,
                 forks_count,
-                commits_count)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)
+                commits_count,
+                stars_count,
+                watchers_count
+           )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT (plugin_name) DO UPDATE SET
                     owner_login=excluded.owner_login,
                     repo_link=excluded.repo_link,
@@ -75,12 +86,15 @@ class AdminController
                     date_created=excluded.date_created,
                     date_pushed=excluded.date_pushed,
                     date_updated=excluded.date_updated,
-                    all_issues_count=excluded.all_issues_count,
-                    oldest_issue=excluded.oldest_issue,                                 
-                    newest_issue=excluded.newest_issue,                                                        
+                    all_issues_count=excluded.all_issues_count,                                                    
                     open_issues_count=excluded.open_issues_count,
+                    closed_issues_count=excluded.closed_issues_count,
+                    newest_issue=excluded.newest_issue,    
+                    oldest_issue=excluded.oldest_issue,                                 
                     forks_count=excluded.forks_count,
-                    commits_count=excluded.commits_count
+                    commits_count=excluded.commits_count,
+                    stars_count=excluded.stars_count,
+                    watchers_count=excluded.watchers_count
                 ";
                 $data = [
                     $plugin->name,
@@ -92,10 +106,13 @@ class AdminController
                     $plugin->date_updated,
                     $plugin->all_issues,
                     $plugin->open_issues_count,
-                    $plugin->oldest_issue,
+                    $plugin->closed_issues_count,
                     $plugin->newest_issue,
+                    $plugin->oldest_issue,
                     $plugin->forks_count,
-                    $plugin->commits_count
+                    $plugin->commits_count,
+                    $plugin->stars_count,
+                    $plugin->watchers_count
                 ];
 
                 // insert plugin data
