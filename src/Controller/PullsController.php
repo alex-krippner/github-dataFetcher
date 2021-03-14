@@ -12,7 +12,7 @@ class PullsController
 {
     private $twig;
 
-    public function  __construct(Twig $twig)
+    public function __construct(Twig $twig)
     {
         $this->twig = $twig;
     }
@@ -21,17 +21,16 @@ class PullsController
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $args
-    ): ResponseInterface
-    {
+    ): ResponseInterface {
         $db = new DB();
         $db->connect();
         $query = "SELECT * FROM pulls ORDER BY plugin_name DESC";
         $pulls = $db->queryDB($query);
         $db->closeConnection();
-        if(count($pulls) === 0) {
+        if (count($pulls) === 0) {
             echo 'No pull requests found';
             die();
         }
-        return $this->twig->render($response, 'table.twig',['pageName'=> 'Pull Requests', 'data' => $pulls]);
+        return $this->twig->render($response, 'table.twig', ['pageName' => 'Pull Requests', 'data' => $pulls]);
     }
 }

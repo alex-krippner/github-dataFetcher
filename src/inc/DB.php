@@ -110,16 +110,14 @@ class DB
                    stars_count as 'Stars',
                    watchers_count as 'Watchers',
                    ROUND((commits_count / CAST((DATE('now') - date_created) AS FLOAT)), 2) as 'Commits/Year',
-				   SUM (CASE WHEN pulls.state = 'open' THEN 1 ELSE 0 END) AS 'Open Pull Requests',
-				   SUM (CASE WHEN pulls.state = 'closed' THEN 1 ELSE 0 END) AS 'Closed Pull Requests',
-                   ROUND((closed_issues_count / CAST(open_issues_count AS REAL)) * 100) AS 'Closed/Opened Issues %',
-                   COUNT(contributors.plugin_name) AS 'Contributors',
-                   SUM(CASE WHEN issues.created_at >= DATE('now', '-2 year') AND issues.state = 'open' THEN 1 ELSE 0 END) AS 'Issues opened in the last 2 years',
-                   SUM(CASE WHEN issues.created_at >= DATE('now', '-2 year') AND issues.state = 'closed' THEN 1 ELSE 0 END) AS 'Issues closed in the last 2 years'
-				   FROM plugins p
-                   LEFT JOIN pulls ON p.plugin_name = pulls.plugin_name
-				   LEFT JOIN contributors ON p.plugin_name = contributors.plugin_name
-                   LEFT JOIN issues ON p.plugin_name = issues.plugin_name
+				   (SELECT SUM (CASE WHEN pulls.state = 'open' THEN 1 ELSE 0 END) FROM pulls WHERE pulls.plugin_name = :plugin_name )AS 'Open Pull Requests',
+				   (SELECT SUM (CASE WHEN pulls.state = 'closed' THEN 1 ELSE 0 END) FROM pulls WHERE pulls.plugin_name = :plugin_name )AS 'Closed Pull Requests',
+                   (SELECT SUM (CASE WHEN issues.state = 'open' THEN 1 ELSE 0 END) FROM issues WHERE plugin_name = :plugin_name)  as 'open issues',
+                   (SELECT SUM (CASE WHEN issues.state = 'closed' THEN 1 ELSE 0 END) FROM issues WHERE plugin_name = :plugin_name)  as 'closed issues',
+                   (SELECT COUNT(*) from contributors WHERE contributors.plugin_name = :plugin_name)AS 'Contributors',
+                   (SELECT SUM(CASE WHEN issues.created_at >= DATE('now', '-2 year') THEN 1 ELSE 0 END) FROM issues WHERE plugin_name = :plugin_name) AS 'Issues opened in the last 2 years',
+                   (SELECT SUM(CASE WHEN issues.closed_at >= DATE('now', '-2 year') THEN 1 ELSE 0 END) FROM issues WHERE plugin_name = :plugin_name) AS 'Issues closed in the last 2 years'
+				   FROM plugins p 
                    WHERE p.plugin_name =  :plugin_name;
             ");
         $clean = array();

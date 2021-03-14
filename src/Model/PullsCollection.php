@@ -11,7 +11,6 @@ class PullsCollection
 
     function __construct($pullsArray, $plugin_name)
     {
-
         foreach ($pullsArray as $pullData) {
             $this->pullsCollection[] = new Pull($pullData, $plugin_name);
         }

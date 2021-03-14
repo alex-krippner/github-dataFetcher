@@ -18,7 +18,6 @@ use Slim\Views\Twig;
  * refactor dependencies of Plugin class
  * write logic to update at intervals or when repos have been modified or both?
  */
-
 class AdminController
 {
     private $twig;
@@ -54,7 +53,7 @@ class AdminController
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(30);
+        $plugins = $pluginCollection->getPlugins(5);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {
@@ -195,15 +194,16 @@ class AdminController
                     $issues = $issuesCollection->getIssuesCollection();
                     foreach ($issues as $issue) {
                         $query = "
-                        INSERT INTO issues (plugin_name, issues_node_id, title, body, state, issue_number, user_login, created_at)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                        INSERT INTO issues (plugin_name, issues_node_id, title, body, state, issue_number, user_login, created_at, closed_at)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                         ON CONFLICT (issues_node_id) DO UPDATE SET
                         title=excluded.title,
                         body=excluded.body,
                         state=excluded.state,
                         issue_number=excluded.issue_number,
                         user_login=excluded.user_login, 
-                        created_at=excluded.created_at
+                        created_at=excluded.created_at,
+                        closed_at=excluded.closed_at
                         ";
 
                         $data = [
@@ -214,7 +214,8 @@ class AdminController
                             $issue->state,
                             $issue->issue_number,
                             $issue->user_login,
-                            $issue->created_at
+                            $issue->created_at,
+                            $issue->closed_at
 
                         ];
 

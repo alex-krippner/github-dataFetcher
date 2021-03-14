@@ -13,6 +13,7 @@ class Issue
     public $issue_number;
     public $user_login;
     public $created_at;
+    public $closed_at;
 
 
     public function __construct($issueData, $plugin_name)
@@ -25,5 +26,6 @@ class Issue
         $this->issue_number = $issueData['number'];
         $this->user_login = $issueData['user']['login'];
         $this->created_at = date('Y-m-d H:m', strtotime($issueData['created_at']));
+        $this->closed_at = date('Y-m-d H:m', strtotime($issueData['closed_at']));
     }
 }

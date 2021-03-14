@@ -8,7 +8,7 @@
         <thead>
         <tr>
             {% for key, value in data[0] %}
-            <td>{{ key }}</td>
+            <td>{{ key | capitalize | replace({'_': ' '})}}</td>
             {% endfor %}
         </tr>
         </thead>
