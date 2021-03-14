@@ -53,7 +53,7 @@ class AdminController
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(5);
+        $plugins = $pluginCollection->getPlugins(30);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {

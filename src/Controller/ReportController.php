@@ -56,6 +56,6 @@ class ReportController
             echo "Couldn't produce report";
             die();
         }
-        return $this->twig->render($response, 'report.twig', ['pageName' => 'Report', 'data' => $reportData]);
+        return $this->twig->render($response, 'report.twig', ['pageName' => 'Report', 'data' => $reportData[0]]);
     }
 }
