@@ -34,6 +34,7 @@ class AdminController
     ): ResponseInterface {
         $db = new DB();
         $db->connect();
+        $db->createTable();
         $count = $db->countRows('plugins');
         $db->closeConnection();
 
@@ -53,7 +54,7 @@ class AdminController
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(50);
+        $plugins = $pluginCollection->getPlugins(2);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {

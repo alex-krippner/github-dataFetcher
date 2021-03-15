@@ -2,12 +2,25 @@
 
 {% block content %}
 <h2>Oversight</h2>
-<form id="report-form" action="/report" method="GET">
-    <div class="mb-3">
-        <label for="search" class="form-label">Produce Report</label>
-        <input type="text" class="form-control" id="search" name="search">
-    </div>
-    <button id="report__submit-btn" type="submit" class="btn btn-primary">Submit</button>
-</form>
+
+<p>Reports can be produced for individual dokuwiki plugins by searching by the plugin name or press the 'Aggregate Report' button to
+    to get an aggregate report of all the dokuwiki plugins</p>
+
+<div class="container">
+    <form id="report-form" action="/report" method="GET">
+        <div class="mb-3">
+            <label for="search" class="form-label">Produce Individual Plugin Report</label>
+            <input type="text" class="form-control" id="search" name="search">
+        </div>
+        <button id="report__submit-btn" type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<div class="container">
+    <form action="/report/all-plugins" id="aggr-report-form">
+        <button id="aggr-btn" type="submit" class="btn btn-warning">Aggregate Report</button>
+    </form>
+</div>
+
 
 {% endblock %}

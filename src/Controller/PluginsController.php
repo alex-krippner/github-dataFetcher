@@ -27,9 +27,9 @@ class PluginsController
         $query = 'SELECT * FROM plugins ORDER BY open_issues_count DESC ';
         $plugins = $db->queryDB($query);
         $db->closeConnection();
-        if (count($plugins) === 0) {
-            echo 'No Plugins';
-            die();
+        if (!isset($plugins) || empty($plugins)) {
+            $message = 'No plugins data available';
+            return $this->twig->render($response, 'error.twig', ['pageName' => 'Error', 'message' => $message]);
         }
         return $this->twig->render($response, 'table.twig', ['pageName' => 'Plugins', 'data' => $plugins]);
     }

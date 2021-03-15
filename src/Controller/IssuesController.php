@@ -26,9 +26,9 @@ class IssuesController
         $query = 'SELECT * FROM issues ORDER BY plugin_name ASC, created_at ASC ';
         $issues = $db->queryDB($query);
         $db->closeConnection();
-        if (count($issues) === 0) {
-            echo 'No Plugins';
-            die();
+        if (!isset($issues) || empty($issues)) {
+            $message = 'No issues data available';
+            return $this->twig->render($response, 'error.twig', ['pageName' => 'Error', 'message' => $message]);
         }
         return $this->twig->render($response, 'table.twig', ['pageName' => 'Issues', 'data' => $issues]);
     }

@@ -98,14 +98,18 @@ class DB
 
     public function countRows($tableName)
     {
-        return count($this->pdo->query('SELECT * FROM ' . $tableName)->fetchAll(PDO::FETCH_ASSOC));
+        $resp =  $this->pdo->query("SELECT COUNT(DISTINCT plugin_name) as 'count' FROM " . $tableName)->fetchAll(PDO::FETCH_ASSOC);
+        return $resp[0]['count'];
     }
 
     public function getReportData($report_subject)
     {
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $this->pdo->prepare("
-            SELECT p.plugin_name, owner_login, repo_link, description,
+        $query = "
+            SELECT p.plugin_name, 
+                   owner_login, 
+                   repo_link, 
+                   description,
                    forks_count,
                    stars_count,
                    watchers_count,
@@ -119,7 +123,7 @@ class DB
                    (SELECT SUM(CASE WHEN issues.closed_at >= DATE('now', '-2 year') THEN 1 ELSE 0 END) FROM issues WHERE plugin_name = :plugin_name) AS 'issues closed in the last 2 years'
 				   FROM plugins p 
                    WHERE p.plugin_name =  :plugin_name;
-            ");
+            ";
         $clean = array();
 
         if (isset($report_subject)) {
@@ -130,6 +134,7 @@ class DB
                     $clean['report_subject'] = $report_subject;
                 }
 
+                $stmt = $this->pdo->prepare($query);
                 $stmt->bindParam(":plugin_name", $clean['report_subject'], PDO::PARAM_STR, 32);
                 $stmt->execute();
                 return $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -7,24 +7,27 @@
 
     <div class="container">
         <p>
-            This is an aggregation of {{data['plugin count']}} dokuwiki plugins.
+            This is an aggregation of {{data['plugin count']}} dokuwiki plugins with an average of {{data['commits/year']}} commits per year.
         </p>
-        <p>
-            There is an average of {{data['commits/year']}} commits per plugin.
-        </p>
-        <p>
-            There are currently {{data['open issues count']}} open and {{data['closed issues count']}} closed issues
-            of which {{data['issues opened in the last 2 years']}} have been opened and
-            {{data['issues closed in the last 2 years']}} have been closed in the last two years.
-        </p>
-        <p>
-            With {{data['contributors count']}} contributors there are {{data['open pulls']}}
-            open pull requests and {{data['closed pulls']}} closed pull requests.
-        </p>
-        <p>
-            The plugins have been have {{data['stars count']}} stars, {{data['watchers count']}} watchers, and
-            {{data['forks count']}} forks.
-        </p>
+
+        <h3>Community stats</h3>
+        <div class="container">
+            <p>
+                There are currently {{data['open issues count']}} open and {{data['closed issues count']}} closed issues
+                of which {{data['issues opened in the last 2 years']}} have been opened and
+                {{data['issues closed in the last 2 years']}} have been closed in the last two years.
+            </p>
+            <p>
+                With {{data['contributors count']}} contributors there are {{data['open pulls']}}
+                open pull requests and {{data['closed pulls']}} closed pull requests.
+            </p>
+            <p>
+                The plugins have been have {{data['stars count']}} stars, {{data['watchers count']}} watchers, and
+                {{data['forks count']}} forks.
+            </p>
+
+        </div>
+
 
     </div>
 </div>

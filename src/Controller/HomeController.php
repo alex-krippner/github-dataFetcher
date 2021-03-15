@@ -6,6 +6,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 
+use Mon\Oversight\inc\DB;
+
 class HomeController
 {
     private $twig;
@@ -20,6 +22,10 @@ class HomeController
         ResponseInterface $response,
         array $args
     ): ResponseInterface {
+        $db = new DB();
+        $db->connect();
+        $db->createTable();
+        $db->closeConnection();
         return $this->twig->render($response, 'home.twig');
     }
 }

@@ -27,9 +27,9 @@ class ReportController
         $db->connect();
         $reportData = $db->getReportData($plugin_name);
         $db->closeConnection();
-        if (!isset($reportData)) {
-            echo "Couldn't produce report";
-            die();
+        if (!isset($reportData) || empty($reportData)) {
+            $message =  'No report data available';
+            return $this->twig->render($response, 'error.twig', ['pageName' => 'Error', 'message' => $message]);
         }
         return $this->twig->render($response, 'report.twig', ['pageName' => 'Report', 'data' => $reportData[0]]);
     }
@@ -43,9 +43,9 @@ class ReportController
         $db->connect();
         $pluginAggregateReportData = $db->getAggregatePluginReportData();
 
-        if (!isset($pluginAggregateReportData)) {
-            echo "Couldn't produce report";
-            die();
+        if (!isset($pluginAggregateReportData) || empty($pluginAggregateReportData)) {
+            $message =  'No report data available';
+            return $this->twig->render($response, 'error.twig', ['pageName' => 'Error', 'message' => $message]);
         }
 
         return $this->twig->render($response, 'aggregateReport.twig',

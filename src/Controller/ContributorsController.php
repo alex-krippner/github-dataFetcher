@@ -26,9 +26,9 @@ class ContributorsController
         $query = 'SELECT plugin_name, contributor_login FROM contributors ORDER BY contributor_login ASC ';
         $contributors = $db->queryDB($query);
         $db->closeConnection();
-        if (count($contributors) === 0) {
-            echo 'No Plugins';
-            die();
+        if (!isset($contributors) || empty($contributors)) {
+            $message = 'No contributors data available';
+            return $this->twig->render($response, 'error.twig', ['pageName' => 'Error', 'message' => $message]);
         }
         return $this->twig->render($response, 'table.twig', ['pageName' => 'Contributors', 'data' => $contributors]);
     }
