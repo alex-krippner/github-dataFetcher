@@ -5,27 +5,33 @@
 <h6>Owned by {{data['owner_login']}}</h6>
 <div class="container">
     <h4>Description:</h4>
-    <p>{{data['description']}}</p>
+    <div class="container">
+        <p>{{data['description']}}</p>
+    </div>
 </div>
 
 <div class="container">
-    <p>
-        <a href="{{data['repo_link']}}">{{data['plugin_name']}}</a>
-        has an average of {{data['commits/year']}} commits per year.
-    </p>
+    <h4>Report:</h4>
+    <div class="container">
+        <p>
+            <a href="{{data['repo_link']}}">{{data['plugin_name']}}</a>
+            has an average of {{data['commits/year']}} commits per year.
+        </p>
 
-    <p>
-        With {{data['contributors count']}} <a
-            href="https://github.com/{{data['owner_login']}}/{{data['plugin_name']}}/graphs/contributors">contributors</a>
-        there are {{data['open pull requests']}}
-        open <a href="https://github.com/{{data['owner_login']}}/{{data['plugin_name']}}/pulls">pull requests</a> and
-        {{data['closed pull requests']}} closed pull requests.
-    </p>
-    <p>
-        There are currently {{data['open issues count']}} open and {{data['closed issues count']}} closed <a
-            href="https://github.com/{{data['owner_login']}}/{{data['plugin_name']}}/issues">issues</a>
-        of which {{data['issues opened in the last 2 years']}} have been opened and
-        {{data['issues closed in the last 2 years']}} have been closed in the last two years.
-    </p>
+        <p>
+            With {{data['contributors count']}} <a
+                href="https://github.com/{{data['owner_login']}}/{{data['plugin_name']}}/graphs/contributors">contributors</a>
+            there are {{data['open pull requests']}}
+            open <a href="https://github.com/{{data['owner_login']}}/{{data['plugin_name']}}/pulls">pull requests</a>
+            and
+            {{data['closed pull requests']}} closed pull requests.
+        </p>
+        <p>
+            There are currently {{data['open issues count']}} open and {{data['closed issues count']}} closed <a
+                href="https://github.com/{{data['owner_login']}}/{{data['plugin_name']}}/issues">issues</a>
+            of which {{data['issues opened in the last 2 years']}} have been opened and
+            {{data['issues closed in the last 2 years']}} have been closed in the last two years.
+        </p>
+    </div>
 </div>
 {% endblock %}

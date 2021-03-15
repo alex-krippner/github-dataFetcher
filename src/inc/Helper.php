@@ -43,4 +43,5 @@ class Helper
 
         return $classArray;
     }
+
 }
