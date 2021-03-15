@@ -2,15 +2,18 @@
 
 {% block content %}
 <h2>Admin Page</h2>
-<ul>
-    <li>
-        <a href="/admin/update">Update plugins table</a>
-    </li>
-    <li>
-        <a href="/admin/update?get=contributors">Update contributors</a>
-    </li>
-    <li>
-        <a href="/admin/update?get=issues">Update issues</a>
-    </li>
-</ul>
+
+<div class="container">
+    <form action="/admin/update" id="update-form">
+        <div class="mb-3">
+            <label for="update" class="form-label">How many plugins to update?</label>
+            <input type="text" class="form-control" id="update" name="plugins-number">
+        </div>
+        <button id="report__submit-btn" type="submit" class="btn btn-primary">Update</button>
+    </form>
+</div>
+
+<div class="container">
+    <p>All tables will be updated</p>
+</div>
 {% endblock %}

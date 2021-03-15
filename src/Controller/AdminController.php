@@ -51,10 +51,15 @@ class AdminController
         $db = new DB();
         $db->connect();
         $db->createTable();
+        preg_match('/^\d+$/', $_REQUEST['plugins-number'], $pluginsRequestAmount);
+        if (!isset($pluginsRequestAmount[0]) || $pluginsRequestAmount[0] === '0') {
+            $message = 'Please only enter numbers that are 1 or greater';
+            return $this->twig->render($response, 'error.twig', ['pageName' => 'Error', 'message' => $message]);
+        }
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(2);
+        $plugins = $pluginCollection->getPlugins($pluginsRequestAmount[0]);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {
@@ -162,45 +167,33 @@ class AdminController
                 }
 
 
-                $contributors = null;
-                // insert contributors data
-                if (isset($_GET) && isset($_GET['get'])) {
-                    $contributors = preg_match('/^contributors$/', $_GET['get']);
-                }
-                if ($contributors) {
-                    // get contributors in array form
-                    $contributorCollection = new ContributorCollection($plugin->contributors_api_url, $plugin->name);
-                    $contributors = $contributorCollection->getContributorCollection();
-                    foreach ($contributors as $contributor) {
-                        $query = "
+                // get contributors in array form
+                $contributorCollection = new ContributorCollection($plugin->contributors_api_url, $plugin->name);
+                $contributors = $contributorCollection->getContributorCollection();
+                foreach ($contributors as $contributor) {
+                    $query = "
                         INSERT INTO contributors (plugin_name, contributor_login, name, email, company)
                         VALUES (?, ?, ?, ?, ?)";
 
-                        $data = [
-                            $contributor->plugin_name,
-                            $contributor->contributor_login,
-                            $contributor->name,
-                            $contributor->email,
-                            $contributor->company,
-                        ];
+                    $data = [
+                        $contributor->plugin_name,
+                        $contributor->contributor_login,
+                        $contributor->name,
+                        $contributor->email,
+                        $contributor->company,
+                    ];
 
-                        // insert contributors data
-                        $db->insertData($query, $data);
-                    }
+                    // insert contributors data
+                    $db->insertData($query, $data);
                 }
 
-                $issues = null;
-                // insert issues data
-                if (isset($_GET) && isset($_GET['get'])) {
-                    $issues = preg_match('/^issues$/', $_GET['get']);
-                }
-                if ($issues) {
-                    // get issues in array form
-                    $issuesCollection = new IssuesCollection(str_replace('{/number}', '?per_page=100&state=all',
-                        $plugin->issues_url), $plugin->name);
-                    $issues = $issuesCollection->getIssuesCollection();
-                    foreach ($issues as $issue) {
-                        $query = "
+
+                // get issues in array form
+                $issuesCollection = new IssuesCollection(str_replace('{/number}', '?per_page=100&state=all',
+                    $plugin->issues_url), $plugin->name);
+                $issues = $issuesCollection->getIssuesCollection();
+                foreach ($issues as $issue) {
+                    $query = "
                         INSERT INTO issues (plugin_name, issues_node_id, title, body, state, issue_number, user_login, created_at, closed_at)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                         ON CONFLICT (issues_node_id) DO UPDATE SET
@@ -213,27 +206,27 @@ class AdminController
                         closed_at=excluded.closed_at
                         ";
 
-                        $data = [
-                            $issue->plugin_name,
-                            $issue->node_id,
-                            $issue->title,
-                            $issue->body,
-                            $issue->state,
-                            $issue->issue_number,
-                            $issue->user_login,
-                            $issue->created_at,
-                            $issue->closed_at
+                    $data = [
+                        $issue->plugin_name,
+                        $issue->node_id,
+                        $issue->title,
+                        $issue->body,
+                        $issue->state,
+                        $issue->issue_number,
+                        $issue->user_login,
+                        $issue->created_at,
+                        $issue->closed_at
 
-                        ];
+                    ];
 
-                        // insert issues  data
-                        $db->insertData($query, $data);
-                    }
+                    // insert issues  data
+                    $db->insertData($query, $data);
                 }
             }
         }
         $count = $db->countRows('plugins');
         $db->closeConnection();
-        return $this->twig->render($response, 'update.twig', ['count' => $count, 'table_name' => 'plugins']);
+        return $this->twig->render($response, 'update.twig',
+            ['pluginsRequested' => $pluginsRequestAmount[0], 'count' => $count, 'table_name' => 'plugins']);
     }
 }

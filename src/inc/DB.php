@@ -98,7 +98,7 @@ class DB
 
     public function countRows($tableName)
     {
-        $resp =  $this->pdo->query("SELECT COUNT(DISTINCT plugin_name) as 'count' FROM " . $tableName)->fetchAll(PDO::FETCH_ASSOC);
+        $resp = $this->pdo->query("SELECT COUNT(DISTINCT plugin_name) as 'count' FROM " . $tableName)->fetchAll(PDO::FETCH_ASSOC);
         return $resp[0]['count'];
     }
 
