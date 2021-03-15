@@ -27,6 +27,8 @@ class Plugin
     public $pulls;
     public $stars_count;
     public $watchers_count;
+    public $age;
+    public $avg_commits_per_year;
 
     function __construct($pluginData)
     {
@@ -42,7 +44,6 @@ class Plugin
         $this->open_issues_count = $pluginData['open_issues_count'];
         $this->closed_issues_count = $this->all_issues - $this->open_issues_count;
         $this->forks_count = $pluginData['forks_count'];
-
         $this->oldest_issue = $pluginData['open_issues'] ? $this->getPluginIssueByAge('oldest',
             str_replace('{/number}', '?per_page=100&state=open&sort=created&direction=asc',
                 $pluginData['issues_url'])) : 'No Open Issues';
@@ -57,6 +58,8 @@ class Plugin
             $pluginData['pulls_url']), '');
         $this->stars_count = $pluginData['stargazers_count'];
         $this->watchers_count = $pluginData['watchers_count'];
+        $this->age = date('Y') - date('Y', strtotime($this->date_created));
+        $this->avg_commits_per_year = $this->commits_count / $this->age;
     }
 
     /**

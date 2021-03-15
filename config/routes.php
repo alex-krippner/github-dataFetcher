@@ -4,7 +4,6 @@
 use Slim\App;
 
 // FIXME: Add groups
-// TODO: Add twig nav block
 
 return function (App $app) {
     $app->get('/', \Mon\Oversight\Controller\HomeController::class . ':renderHomeView');
@@ -15,5 +14,6 @@ return function (App $app) {
     $app->get('/issues', \Mon\Oversight\Controller\IssuesController::class . ':showTable');
     $app->get('/report', \Mon\Oversight\Controller\ReportController::class . ':getReport');
     $app->get('/pull-requests', \Mon\Oversight\Controller\PullsController::class . ':getPulls');
+    $app->get('/report/all-plugins', \Mon\Oversight\Controller\ReportController::class . ':getAggregatePluginReport');
 };
 

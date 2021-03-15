@@ -53,7 +53,7 @@ class AdminController
 
         // get plugin repos in array form
         $pluginCollection = new PluginCollection();
-        $plugins = $pluginCollection->getPlugins(30);
+        $plugins = $pluginCollection->getPlugins(50);
 
         // loop array of plugin objects and insert into database's plugins table
         if (isset($plugins)) {
@@ -75,9 +75,11 @@ class AdminController
                 forks_count,
                 commits_count,
                 stars_count,
-                watchers_count
+                watchers_count,
+                age,
+                avg_commits_per_year
            )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT (plugin_name) DO UPDATE SET
                     owner_login=excluded.owner_login,
                     repo_link=excluded.repo_link,
@@ -93,7 +95,9 @@ class AdminController
                     forks_count=excluded.forks_count,
                     commits_count=excluded.commits_count,
                     stars_count=excluded.stars_count,
-                    watchers_count=excluded.watchers_count
+                    watchers_count=excluded.watchers_count,
+                    age=excluded.age,
+                    avg_commits_per_year=excluded.avg_commits_per_year                                    
                 ";
                 $data = [
                     $plugin->name,
@@ -111,7 +115,9 @@ class AdminController
                     $plugin->forks_count,
                     $plugin->commits_count,
                     $plugin->stars_count,
-                    $plugin->watchers_count
+                    $plugin->watchers_count,
+                    $plugin->age,
+                    $plugin->avg_commits_per_year
                 ];
 
                 // insert plugin data

@@ -2,22 +2,24 @@
 
 CREATE TABLE IF NOT EXISTS plugins
 (
-    plugin_name         TEXT PRIMARY KEY,
-    owner_login         TEXT,
-    repo_link           TEXT,
-    description         TEXT,
-    date_created        TEXT,
-    date_pushed         TEXT,
-    date_updated        TEXT,
-    all_issues_count    INTEGER,
-    open_issues_count   INTEGER,
-    closed_issues_count INTEGER,
-    newest_issue        TEXT,
-    oldest_issue        TEXT,
-    commits_count       INTEGER,
-    forks_count         INTEGER,
-    stars_count         INTEGER,
-    watchers_count      INTEGER
+    plugin_name          TEXT PRIMARY KEY,
+    owner_login          TEXT,
+    repo_link            TEXT,
+    description          TEXT,
+    date_created         TEXT,
+    date_pushed          TEXT,
+    date_updated         TEXT,
+    all_issues_count     INTEGER,
+    open_issues_count    INTEGER,
+    closed_issues_count  INTEGER,
+    newest_issue         TEXT,
+    oldest_issue         TEXT,
+    commits_count        INTEGER,
+    forks_count          INTEGER,
+    stars_count          INTEGER,
+    watchers_count       INTEGER,
+    age                  INTEGER,
+    avg_commits_per_year INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS contributors
