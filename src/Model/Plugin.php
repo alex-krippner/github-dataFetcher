@@ -68,6 +68,7 @@ class Plugin
      * @return string the title of the issue
      */
 
+    // FIXME: Replace with SQL query?
     private function getPluginIssueByAge($age, $url)
     {
         $issueTitle = '';

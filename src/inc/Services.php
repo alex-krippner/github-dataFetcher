@@ -80,7 +80,7 @@ class Services
         return file_get_contents(__DIR__ . '/../../.env');
     }
 
-    private static function createKeyValueHeadersArray($indexedArray)
+    public static function createKeyValueHeadersArray($indexedArray)
     {
         $headersArrayKeyValuePairs = array();
 
