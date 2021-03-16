@@ -166,7 +166,7 @@ class AdminController
                     }
                 }
 
-
+                // TODO: Add checks for conflicts to avoid duplicate data when updating.
                 // get contributors in array form
                 $contributorCollection = new ContributorCollection($plugin->contributors_api_url, $plugin->name);
                 $contributors = $contributorCollection->getContributorCollection();

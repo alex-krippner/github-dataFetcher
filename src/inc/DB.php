@@ -147,28 +147,6 @@ class DB
 
     public function getAggregatePluginReportData()
     {
-        /**
-         * TODO: STATS TO GET
-         *
-         * CODE STATS:
-         *  AVERAGE COMMITS PER YEAR -- DONE
-         *  COMMITS IN THE LAST TWO YEARS -- OMIT FOR NOW
-         *
-         * CODE STATS:
-         *  OPEN PR -- DONE
-         *  CLOSED PR -- DONE
-         *
-         * COMMUNITY STATS
-         *  CONTRIBUTORS COUNT -- DONE
-         *  FORKS -- DONE
-         *  STARS -- DONE
-         *  WATCHERS -- DONE
-         *  OPEN ISSUES -- DONE
-         *  CLOSED ISSUES -- DONE
-         *  OPENED IN THE LAST TWO YEARS
-         *  CLOSED IN TEH LAST TWO YEARS
-         */
-
         $query = "
             SELECT ROUND (avg (avg_commits_per_year), 2) as 'commits/year', 
             COUNT (DISTINCT plugin_name) as 'plugin count',
@@ -181,7 +159,10 @@ class DB
 			(SELECT SUM (CASE WHEN issues.state = 'open' THEN 1 ELSE 0 END) FROM issues  ) as 'open issues count',
             (SELECT SUM (CASE WHEN issues.state = 'closed' THEN 1 ELSE 0 END) FROM issues  )  as 'closed issues count',
 			(SELECT SUM (CASE WHEN issues.created_at >= DATE('now', '-2 year') THEN 1 ELSE 0 END) FROM issues) AS 'issues opened in the last 2 years',
-            (SELECT SUM (CASE WHEN issues.closed_at >= DATE('now', '-2 year') THEN 1 ELSE 0 END) FROM issues) AS 'issues closed in the last 2 years'
+            (SELECT SUM (CASE WHEN issues.closed_at >= DATE('now', '-2 year') THEN 1 ELSE 0 END) FROM issues) AS 'issues closed in the last 2 years',
+            (SELECT plugin_name FROM plugins GROUP BY plugin_name HAVING MAX (stars_count)) as 'most starred',
+            (SELECT plugin_name FROM plugins GROUP BY plugin_name HAVING MAX (watchers_count)) as 'most watched',
+            (SELECT plugin_name FROM plugins GROUP BY plugin_name HAVING MAX (forks_count)) as 'most forked'   
             FROM plugins
             ";
 
