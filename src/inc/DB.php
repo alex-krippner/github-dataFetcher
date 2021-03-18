@@ -39,8 +39,6 @@ class DB
         $this->pdo = null;
     }
 
-    // FIXME: use PDO transaction
-
     /**
      * Creates tables using up to date schemas
      */
@@ -102,6 +100,8 @@ class DB
         return $resp[0]['count'];
     }
 
+    // FIXME: ALLOW plugin name such as 'plugin-name' with hyphens
+
     public function getReportData($report_subject)
     {
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -145,6 +145,8 @@ class DB
         }
     }
 
+
+    // FIXME: MOST STARRED, FORKED, WATCHED queries are inaccurate
     public function getAggregatePluginReportData()
     {
         $query = "

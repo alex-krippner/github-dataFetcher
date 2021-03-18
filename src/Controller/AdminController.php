@@ -166,15 +166,23 @@ class AdminController
                     }
                 }
 
-                // TODO: Add checks for conflicts to avoid duplicate data when updating
-                // maybe use node id
+                // TODO: Create separate table for contributors and contributions
                 // get contributors in array form
                 $contributorCollection = new ContributorCollection($plugin->contributors_api_url, $plugin->name);
                 $contributors = $contributorCollection->getContributorCollection();
                 foreach ($contributors as $contributor) {
                     $query = "
-                        INSERT INTO contributors (plugin_name, contributor_login, name, email, company)
-                        VALUES (?, ?, ?, ?, ?)";
+                        INSERT INTO contributors (plugin_name, contributor_login, name, email, company, contributions, contributionId)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                        ON CONFLICT (contributionId) DO UPDATE SET
+                        plugin_name=excluded.plugin_name,
+                        contributor_login=excluded.contributor_login,
+                        name=excluded.name,
+                        email=excluded.email,
+                        company=excluded.company,
+                        contributions=excluded.contributions,
+                        contributionId=excluded.contributionId
+                        ";
 
                     $data = [
                         $contributor->plugin_name,
@@ -182,6 +190,8 @@ class AdminController
                         $contributor->name,
                         $contributor->email,
                         $contributor->company,
+                        $contributor->contributions,
+                        $contributor->contributionId
                     ];
 
                     // insert contributors data

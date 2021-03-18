@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS contributors
     name              TEXT,
     email             TEXT,
     company           TEXT,
+    contributions     TEXT,
+    contributionId    TEXT PRIMARY KEY,
     FOREIGN KEY (plugin_name) REFERENCES plugins (plugin_name)
 );
 

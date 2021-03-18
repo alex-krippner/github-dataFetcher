@@ -23,7 +23,7 @@ class ContributorsController
     ): ResponseInterface {
         $db = new DB();
         $db->connect();
-        $query = 'SELECT plugin_name, contributor_login FROM contributors ORDER BY contributor_login ASC ';
+        $query = 'SELECT plugin_name, contributor_login, contributions FROM contributors ORDER BY contributor_login ASC ';
         $contributors = $db->queryDB($query);
         $db->closeConnection();
         if (!isset($contributors) || empty($contributors)) {

@@ -8,6 +8,8 @@ use Slim\Views\Twig;
 
 use Mon\Oversight\inc\DB;
 
+// TODO: Add documnetation
+
 class HomeController
 {
     private $twig;

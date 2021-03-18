@@ -2,8 +2,6 @@
 
 namespace Mon\Oversight\inc;
 
-// TODO: Handle pagination from gitHub
-
 class Services
 {
 
