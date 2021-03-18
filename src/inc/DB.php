@@ -162,9 +162,9 @@ class DB
             (SELECT SUM (CASE WHEN issues.state = 'closed' THEN 1 ELSE 0 END) FROM issues  )  as 'closed issues count',
 			(SELECT SUM (CASE WHEN issues.created_at >= DATE('now', '-2 year') THEN 1 ELSE 0 END) FROM issues) AS 'issues opened in the last 2 years',
             (SELECT SUM (CASE WHEN issues.closed_at >= DATE('now', '-2 year') THEN 1 ELSE 0 END) FROM issues) AS 'issues closed in the last 2 years',
-            (SELECT plugin_name FROM plugins GROUP BY plugin_name HAVING MAX (stars_count)) as 'most starred',
-            (SELECT plugin_name FROM plugins GROUP BY plugin_name HAVING MAX (watchers_count)) as 'most watched',
-            (SELECT plugin_name FROM plugins GROUP BY plugin_name HAVING MAX (forks_count)) as 'most forked'   
+            (SELECT plugin_name FROM plugins GROUP BY plugin_name HAVING MAX (stars_count) ORDER BY stars_count DESC ) as 'most starred',
+            (SELECT plugin_name FROM plugins GROUP BY plugin_name HAVING MAX (watchers_count) ORDER BY watchers_count DESC) as 'most watched',
+            (SELECT plugin_name FROM plugins GROUP BY plugin_name HAVING MAX (forks_count) ORDER BY forks_count DESC) as 'most forked'   
             FROM plugins
             ";
 
