@@ -88,7 +88,7 @@ class DB
                 return $stmt->fetchAll(PDO::FETCH_ASSOC);
             } catch (\Exception $e) {
                 $this->pdo->rollBack();
-                echo "Failed: " . $e->getMessage();
+                return $data = ["Error" => $e->getMessage()];
             }
         }
     }
@@ -140,13 +140,11 @@ class DB
                 return $stmt->fetchAll(PDO::FETCH_ASSOC);
             } catch (\Exception $e) {
                 $this->pdo->rollBack();
-                echo "Failed: " . $e->getMessage();
+                return $data = ["Error" => $e->getMessage()];
             }
         }
     }
 
-
-    // FIXME: MOST STARRED, FORKED, WATCHED queries are inaccurate
     public function getAggregatePluginReportData()
     {
         $query = "

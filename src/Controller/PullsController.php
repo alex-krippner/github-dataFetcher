@@ -27,8 +27,8 @@ class PullsController
         $query = "SELECT * FROM pulls ORDER BY plugin_name DESC";
         $pulls = $db->queryDB($query);
         $db->closeConnection();
-        if (!isset($pulls) || empty($pulls)) {
-            $message = 'No pull request data available';
+        if (isset($pulls) && array_key_exists('Error', $pulls)) {
+            $message = $pulls['Error'];
             return $this->twig->render($response, 'error.twig', ['pageName' => 'Error', 'message' => $message]);
         }
         return $this->twig->render($response, 'table.twig', ['pageName' => 'Pull Requests', 'data' => $pulls]);

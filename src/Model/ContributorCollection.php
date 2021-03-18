@@ -11,12 +11,13 @@ class ContributorCollection
 
     function __construct($url, $plugin_name)
     {
-         $contributorsArray = Services::getApiData($url, '');
+        $contributorsArray = Services::getApiData($url, '');
 
         foreach ($contributorsArray as $contributor) {
             $contributorData = Services::getApiData($contributor['url'], '');
             $contributorData[] =
-            $this->contributorCollection[] = new Contributor($contributorData, $plugin_name, $contributor['contributions']);
+            $this->contributorCollection[] = new Contributor($contributorData, $plugin_name,
+                $contributor['contributions']);
         }
     }
 

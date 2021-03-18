@@ -23,6 +23,7 @@ $settings['twig'] = [
     ],
     // Twig environment options
     // TODO: When enabling cache create tmp directory
+    // TODO: Turn cache on when going to production
     'options' => [
         // Should be set to true in production
         'cache_enabled' => false,
@@ -33,7 +34,7 @@ $settings['twig'] = [
 // Error Handling Middleware settings
 $settings['error'] = [
 
-    // Should be set to false in production
+    // TODO: Set to false when going to production
     'display_error_details' => true,
 
     // Parameter is passed to the default ErrorHandler
